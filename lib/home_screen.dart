@@ -35,76 +35,96 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            children: [
-              Image.asset('assets/images/EcoSenseLogo.PNG', height: 30),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade50,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 3),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Custom AppBar
+            Container(
+              padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Logo
+                      Image.asset('assets/images/EcoSenseLogo.PNG', height: 30),
+
+                      const Spacer(), // Pushes the items apart
+
+                      // Profile Image
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 1; // Navigate to profile page
+                          });
+                        },
+                        child: SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: ClipOval(
+                            child: Image.asset(
+                              'assets/gif/profile.gif',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      // Menu Icon
+                      IconButton(
+                        icon: const Icon(Icons.menu, color: Colors.black),
+                        onPressed: () {},
                       ),
                     ],
                   ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search for a City",
-                      hintStyle: TextStyle(
+                  const SizedBox(height: 10),
+
+                  // Search Bar
+                  // Search Bar
+                  SizedBox(
+                    height: 40,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Search for a City",
+                        hintStyle: TextStyle(
                           color: Colors.green.shade400,
-                          fontWeight: FontWeight.w500),
-                      prefixIcon:
-                          Icon(Icons.search, color: Colors.green.shade400),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 20),
+                          fontWeight: FontWeight.w500,
+                        ),
+                        prefixIcon: Icon(Icons.search, color: Colors.green.shade400),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: const BorderSide(color: Colors.grey, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: const BorderSide(color: Colors.grey, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: const BorderSide(color: Colors.grey, width: 2),
+                        ),
+                        filled: true,
+                        fillColor: Colors.green.shade50,
+                        contentPadding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          const SizedBox(width: 5),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedIndex = 1; // الانتقال إلى صفحة البروفايل عند الضغط
-              });
-            },
-            child: SizedBox(
-              width: 30,
-              height: 30,
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/EcoSenseLogo.PNG',
-                  fit: BoxFit.cover,
-                ),
+
+                ],
               ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.menu, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
+
+            // Body Content
+            Expanded(child: _buildBody()),
+          ],
+        ),
       ),
-      body: _buildBody(),
       bottomNavigationBar: NavigationBar(
-        height: 60,
+        height: 50,
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
           setState(() {
@@ -141,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (_selectedIndex == 0) {
       return _homeContent();
     } else if (_selectedIndex == 1) {
-      return ProfileWidget(); // ✅ عرض واجهة البروفايل هنا
+      return ProfileWidget();
     } else if (_selectedIndex == 2) {
       return const Center(child: Text("Alerts Page"));
     } else {
@@ -165,13 +185,7 @@ class _HomeScreenState extends State<HomeScreen>
                     });
                   },
                   child: Container(
-                    child: const Center(
-                      child: const Text("Air Quality",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
-                    ),
+                    padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.green.shade300, Colors.blue.shade300],
@@ -180,7 +194,13 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: const EdgeInsets.all(16.0),
+                    child: const Center(
+                      child: Text("Air Quality",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          )),
+                    ),
                   ),
                 ),
               ),
@@ -195,9 +215,11 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
-                      color: !isAirQualitySelected
-                          ? Colors.blue.shade900
-                          : Colors.blue.shade700,
+                      gradient: LinearGradient(
+                        colors: [Colors.blue.shade700, Colors.blue.shade300],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     alignment: Alignment.center,
@@ -218,35 +240,41 @@ class _HomeScreenState extends State<HomeScreen>
         Expanded(
           child: isAirQualitySelected
               ? Column(
-                  children: [
-                    TabBar(
-                      controller: _tabController,
-                      indicatorColor: Colors.green,
-                      labelColor: Colors.green,
-                      unselectedLabelColor: Colors.grey,
-                      tabs: [
-                        const Tab(text: "API Data"),
-                        const Tab(text: "Hardware Data 🌟"),
+            children: [
+              TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.green,
+                labelColor: Colors.green,
+                unselectedLabelColor: Colors.grey,
+                tabs: const [
+                  Tab(text: "API Data"),
+                  Tab(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min, // Ensures the row takes only required space
+                      children: [
+                        Text("Hardware Data"),
+                        SizedBox(width: 5), // Adds spacing between text and image
+                        Image(
+                          image: AssetImage('assets/images/premium.png'),
+                          height: 20, // Adjust size as needed
+                        ),
                       ],
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          const Center(
-                            child: Text("Air Quality Data\n(API)"),
-                          ),
-                          const Center(
-                            child: Text("Hardware Data\n(Sensors)"),
-                          ),
-                        ],
-                      ),
-                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: const [
+                    Center(child: Text("Air Quality Data\n(API)")),
+                    Center(child: Text("Hardware Data\n(Sensors)")),
                   ],
-                )
-              : const Center(
-                  child: Text("Weather Data\n(API Only)"),
                 ),
+              ),
+            ],
+          )
+              : const Center(child: Text("Weather Data\n(API Only)")),
         ),
       ],
     );

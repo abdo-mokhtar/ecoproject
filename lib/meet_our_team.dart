@@ -24,7 +24,7 @@ class MeetOurTeamPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Meet Our Team",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.green),
@@ -33,6 +33,7 @@ class MeetOurTeamPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
+      backgroundColor: Colors.white, // Ensures the background is white
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
@@ -45,6 +46,7 @@ class MeetOurTeamPage extends StatelessWidget {
               ),
               elevation: 3,
               margin: const EdgeInsets.symmetric(vertical: 10),
+              color: Colors.white, // Ensures each card has a white background
               child: ListTile(
                 contentPadding: const EdgeInsets.all(16),
                 leading: CircleAvatar(

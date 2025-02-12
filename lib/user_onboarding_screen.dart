@@ -1,7 +1,5 @@
 import 'package:ecosensetest/style_onborading.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class UserOnboardingScreen extends StatelessWidget {
   final controller = PageController(viewportFraction: 1, keepPage: true);

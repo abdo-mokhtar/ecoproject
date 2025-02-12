@@ -35,11 +35,19 @@ class StartPage extends StatelessWidget {
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(
-              padding: const EdgeInsets.all(30.0), // Padding to adjust distance from edges
+              padding: const EdgeInsets.only(
+                  right: 2.0,
+                  bottom: 30.0), // Padding to adjust distance from edges
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent, // جعل الخلفية شفافة
+                  shadowColor:
+                      Colors.transparent, // إزالة الظل ليصبح شفافًا بالكامل
+                ),
                 onPressed: () {
                   // Navigate to the next screen
-                      Navigator.pushNamed(context, '/choose-plan'); // your target screen
+                  Navigator.pushNamed(
+                      context, '/choose-plan'); // your target screen
                 },
                 child: const Icon(
                   Icons.arrow_forward,

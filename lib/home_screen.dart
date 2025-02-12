@@ -1,9 +1,9 @@
 import 'package:ecosensetest/air_quality_widget.dart';
-import 'package:ecosensetest/api_service.dart';
-import 'package:ecosensetest/meet_our_team.dart';
+import 'package:ecosensetest/notification_screen%20.dart';
+import 'package:ecosensetest/popup_menu.dart';
+import 'package:ecosensetest/search_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:ecosensetest/profile_widget.dart';
-import 'package:ecosensetest/about_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen>
       body: SafeArea(
         child: Column(
           children: [
-            if (_selectedIndex != 1)
+            if (_selectedIndex != 1 && _selectedIndex != 2)
               Container(
                 padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                 color: Colors.white,
@@ -75,132 +75,11 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         ),
                         const SizedBox(width: 10),
-                        PopupMenuButton<String>(
-                          icon: const Icon(Icons.menu, color: Colors.black),
-                          offset: Offset(0, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          color: Colors.white,
-                          onSelected: (String value) {
-                            if (value == 'login') {
-                              print("Login Selected");
-                            } else if (value == 'signin') {
-                              print("Signin Selected");
-                            } else if (value == 'team') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MeetOurTeamPage()),
-                              );
-                            } else if (value == 'about') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AboutPage()),
-                              );
-                            } else if (value == 'signout') {
-                              print("SignOut Selected");
-                            }
-                          },
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              PopupMenuItem<String>(
-                                value: 'login',
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.login, color: Colors.black),
-                                    SizedBox(width: 10),
-                                    Text("LogIn"),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuDivider(),
-                              PopupMenuItem<String>(
-                                value: 'signin',
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.person_add, color: Colors.black),
-                                    SizedBox(width: 10),
-                                    Text("SignIn"),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuDivider(),
-                              PopupMenuItem<String>(
-                                value: 'team',
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.group, color: Colors.black),
-                                    SizedBox(width: 10),
-                                    Text("Meet Our Team"),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuDivider(),
-                              PopupMenuItem<String>(
-                                value: 'about',
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.info, color: Colors.black),
-                                    SizedBox(width: 10),
-                                    Text("About"),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuDivider(),
-                              PopupMenuItem<String>(
-                                value: 'signout',
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.logout, color: Colors.red),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      "SignOut",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ];
-                          },
-                        ),
+                        const PopupMenuButtonMenu(),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    SizedBox(
-                      height: 40,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Search for a City",
-                          hintStyle: TextStyle(
-                            color: Colors.green.shade400,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          prefixIcon:
-                              Icon(Icons.search, color: Colors.green.shade400),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                                const BorderSide(color: Colors.grey, width: 2),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                                const BorderSide(color: Colors.grey, width: 2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                                const BorderSide(color: Colors.grey, width: 2),
-                          ),
-                          filled: true,
-                          fillColor: Colors.green.shade50,
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 20),
-                        ),
-                      ),
-                    ),
+                    const SearchTextField(),
                   ],
                 ),
               ),
@@ -265,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen>
     } else if (_selectedIndex == 1) {
       return ProfileWidget();
     } else if (_selectedIndex == 2) {
-      return const Center(child: Text("Alerts Page"));
+      return NotificationsScreen();
     } else {
       return Container();
     }
@@ -279,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen>
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
+              /// Air Quality button
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -304,6 +184,8 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
               const SizedBox(width: 10),
+
+              /// Weather button
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -342,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen>
           child: isAirQualitySelected
               ? Column(
                   children: [
+                    /// Tab bar with two tabs: API Data and Hardware Data
                     TabBar(
                       controller: _tabController,
                       indicatorColor: Colors.green,
@@ -364,12 +247,15 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                       ],
                     ),
+
+                    /// Tab bar view with two children: AirQualityWidget and a text
                     Expanded(
                       child: TabBarView(
                         controller: _tabController,
                         children: [
                           AirQualityWidget(),
-                          Center(child: Text("Hardware Data\n(Sensors)")),
+                          const Center(
+                              child: const Text("Hardware Data\n(Sensors)")),
                         ],
                       ),
                     ),
@@ -380,13 +266,15 @@ class _HomeScreenState extends State<HomeScreen>
       ],
     );
   }
+/******  b00d410f-ee1c-483d-a566-7489ff9988eb  *******/
 
   Widget _buildSettingsPage() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+        borderRadius:
+            const BorderRadius.vertical(top: const Radius.circular(12)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -416,15 +304,15 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildSwitchTile(String title, bool value, Function(bool) onChanged) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
+          const BoxShadow(
             color: Colors.black12,
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -433,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           Switch(
             value: value,

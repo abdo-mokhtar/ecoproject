@@ -3,31 +3,35 @@ import 'package:intl/intl.dart';
 import 'package:ecosensetest/api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AirQualityWidget extends StatelessWidget {
+class AirQualityWidget extends StatefulWidget {
+  @override
+  _AirQualityWidgetState createState() => _AirQualityWidgetState();
+}
+
+class _AirQualityWidgetState extends State<AirQualityWidget> {
+  late Future<List<AirQualityData>> airQualityFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshData();
+  }
+
+  void _refreshData() {
+    setState(() {
+      airQualityFuture = fetchAirQualityData(
+          DateTime.now().subtract(const Duration(days: 7)), DateTime.now());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: fetchAirQualityData(
-          DateTime.now().subtract(const Duration(days: 7)), DateTime.now()),
+      future: airQualityFuture,
       builder: (context, AsyncSnapshot<List<AirQualityData>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text('Loading Air Quality Data...'),
-                  ],
-                ),
-              ),
-            ),
+            child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
           return Center(child: Text("Error: ${snapshot.error}"));
@@ -53,7 +57,7 @@ class AirQualityWidget extends StatelessWidget {
                       const Icon(Icons.air, color: Colors.green, size: 28),
                       const SizedBox(width: 8),
                       const Text("Cairo Air Quality",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                       const Spacer(),
                       _buildDataSourceLink(),
@@ -72,7 +76,15 @@ class AirQualityWidget extends StatelessWidget {
                   _buildPollutant("PM10", airQuality.pm10, 50),
                   _buildPollutant("NH₃", airQuality.aqi * 0.15, 5),
                   const SizedBox(height: 12),
-                  _buildTimestamp(airQuality.timestamp),
+
+                  /// ✅ **زر التحديث + التاريخ والوقت في نفس السطر**
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildTimestamp(airQuality.timestamp),
+                      _buildRefreshButton(), // ✅ زر التحديث في اليمين
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -96,13 +108,13 @@ class AirQualityWidget extends StatelessWidget {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+          Text(
             "Data Source",
-            style: const TextStyle(
+            style: TextStyle(
                 color: Colors.green, fontSize: 14, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(width: 4),
-          const Icon(Icons.open_in_new, size: 16, color: Colors.green),
+          SizedBox(width: 4),
+          Icon(Icons.open_in_new, size: 16, color: Colors.green),
         ],
       ),
     );
@@ -164,7 +176,7 @@ class AirQualityWidget extends StatelessWidget {
 
   Widget _buildTimestamp(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp);
-    String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dateTime);
     String formattedTime = DateFormat('HH:mm').format(dateTime);
 
     return Column(
@@ -172,19 +184,51 @@ class AirQualityWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Text("Date: ",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            const Text("Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
             Text(formattedDate),
           ],
         ),
         Row(
           children: [
-            const Text("Time: ",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            const Text("Time: ", style: TextStyle(fontWeight: FontWeight.bold)),
             Text(formattedTime),
           ],
         ),
       ],
+    );
+  }
+
+  /// 🔄 **زر تحديث البيانات بتدرج لوني**
+  Widget _buildRefreshButton() {
+    return InkWell(
+      onTap: _refreshData,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.green.shade300,
+              Colors.blue.shade300
+            ], // ✅ التدرج اللوني
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.refresh, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            const Text(
+              "Refresh",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

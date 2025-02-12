@@ -12,7 +12,7 @@ class AboutPage extends StatelessWidget {
           onPressed: () {},
         ),
         title: const Text('About',
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.black)),

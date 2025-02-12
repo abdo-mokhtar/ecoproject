@@ -2,7 +2,7 @@ name: ecosensetest
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -31,9 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -43,7 +40,8 @@ dependencies:
   http: ^1.2.2
   dio: ^5.7.0
   persistent_bottom_nav_bar: ^6.2.1
-
+  intl: ^0.20.2
+  url_launcher: ^6.3.1
 
 flutter_icons:
   android: true
@@ -68,7 +66,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -76,25 +73,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/gif/ecosenselogo2.gif
-    - assets/images/EcoSenseLogo.PNG
-    - assets/images/logo1.jpeg
-    - assets/images/logo2.jpeg
-    - assets/json/Animation - 1732729633428.json
-    - assets/json/Environmental Impact Insight Animation.json
-    - assets/json/Tips animation.json
-    - assets/json/Sustainable Practice Resource animation.json
-    - assets/json/Emission Reduction Recommendations Animation.json
-    - assets/json/Sustainability Goal Tools Animation.json
-    - assets/json/Environmental Impact Insights Animation.json
-    - assets/json/Comprehensive Analytics Animation.json
-    - assets/json/AI Driven Pollution Identification Animation.json
-    - assets/json/Mentoring Tools Animation.json
-    - assets/json/Notification Animation.json
-    - assets/json/Interactive Map Animation.json
-    - assets/images/menu.png
-    - assets/images/premium.png
-    - assets/gif/profile.gif
+    - assets/images/
+    - assets/fonts/
+    - assets/gif/
+    - assets/json/
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -109,20 +92,20 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-     - family: Inria Serif
-       fonts:
-         - asset: assets/fonts/InriaSerif-Regular.ttf
-         - asset: assets/fonts/InriaSerif-Bold.ttf
-         - asset: assets/fonts/InriaSerif-BoldItalic.ttf
-         - asset: assets/fonts/InriaSerif-Italic.ttf
-         - asset: assets/fonts/InriaSerif-LightItalic.ttf
-         - asset: assets/fonts/InriaSerif-Light.ttf
-     - family: Inika
-       fonts:
-         - asset: assets/fonts/Inika-Bold.ttf
-         - asset: assets/fonts/Inika-Regular.ttf
-     - family: JejuGothic
-       fonts:
-         - asset: assets/fonts/JejuGothic Regular.ttf
+    - family: Inria Serif
+      fonts:
+        - asset: assets/fonts/InriaSerif-Regular.ttf
+        - asset: assets/fonts/InriaSerif-Bold.ttf
+        - asset: assets/fonts/InriaSerif-BoldItalic.ttf
+        - asset: assets/fonts/InriaSerif-Italic.ttf
+        - asset: assets/fonts/InriaSerif-LightItalic.ttf
+        - asset: assets/fonts/InriaSerif-Light.ttf
+    - family: Inika
+      fonts:
+        - asset: assets/fonts/Inika-Bold.ttf
+        - asset: assets/fonts/Inika-Regular.ttf
+    - family: JejuGothic
+      fonts:
+        - asset: assets/fonts/JejuGothic Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

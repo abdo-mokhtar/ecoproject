@@ -1,7 +1,9 @@
+import 'package:ecosensetest/air_quality_widget.dart';
+import 'package:ecosensetest/api_service.dart';
 import 'package:ecosensetest/meet_our_team.dart';
 import 'package:flutter/material.dart';
 import 'package:ecosensetest/profile_widget.dart';
-import 'package:ecosensetest/about_page.dart'; // استيراد صفحة About
+import 'package:ecosensetest/about_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -58,8 +60,7 @@ class _HomeScreenState extends State<HomeScreen>
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _selectedIndex =
-                                  1; // الانتقال إلى صفحة الملف الشخصي
+                              _selectedIndex = 1;
                             });
                           },
                           child: SizedBox(
@@ -76,8 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
                         const SizedBox(width: 10),
                         PopupMenuButton<String>(
                           icon: const Icon(Icons.menu, color: Colors.black),
-                          offset:
-                              Offset(0, 50), // لجعل القائمة تظهر بعيدًا قليلاً
+                          offset: Offset(0, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -213,7 +213,6 @@ class _HomeScreenState extends State<HomeScreen>
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
           if (index == 3) {
-            // عند الضغط على الإعدادات، افتح الـ Bottom Sheet
             _showSettingsBottomSheet(context);
           } else {
             setState(() {
@@ -247,7 +246,6 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // دالة لفتح Bottom Sheet
   void _showSettingsBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -269,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen>
     } else if (_selectedIndex == 2) {
       return const Center(child: Text("Alerts Page"));
     } else {
-      return Container(); // لن يتم عرض أي شيء عند الضغط على الإعدادات
+      return Container();
     }
   }
 
@@ -369,8 +367,8 @@ class _HomeScreenState extends State<HomeScreen>
                     Expanded(
                       child: TabBarView(
                         controller: _tabController,
-                        children: const [
-                          Center(child: Text("Air Quality Data\n(API)")),
+                        children: [
+                          AirQualityWidget(),
                           Center(child: Text("Hardware Data\n(Sensors)")),
                         ],
                       ),
@@ -383,13 +381,12 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // صفحة الإعدادات كـ Bottom Sheet
   Widget _buildSettingsPage() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -408,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen>
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context); // إغلاق الـ Bottom Sheet
+              Navigator.pop(context);
             },
             child: const Text("Close"),
           ),

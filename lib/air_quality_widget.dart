@@ -26,71 +26,113 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: airQualityFuture,
-      builder: (context, AsyncSnapshot<List<AirQualityData>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(child: Text("Error: ${snapshot.error}"));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text("No data available"));
-        }
+    return SafeArea(
+      child: Scaffold(
+        body: FutureBuilder(
+          future: airQualityFuture,
+          builder: (context, AsyncSnapshot<List<AirQualityData>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _buildLoadingWidget();
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error.toString());
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return _buildNoDataWidget();
+            }
 
-        final airQuality = snapshot.data!.last;
+            final airQuality = snapshot.data!.last;
 
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 4,
-            child: Padding(
+            return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.air, color: Colors.green, size: 28),
-                      const SizedBox(width: 8),
-                      const Text("Cairo Air Quality",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      const Spacer(),
-                      _buildDataSourceLink(),
-                    ],
+              child: SingleChildScrollView(
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(),
+                        const Divider(),
+                        _buildAirQualityIndex(airQuality.aqi),
+                        const SizedBox(height: 12),
+                        _buildPollutant("CO", airQuality.co, 300),
+                        _buildPollutant("NO₂", airQuality.no2, 10),
+                        _buildPollutant("O₃", airQuality.o3, 100,
+                            color: Colors.orange),
+                        _buildPollutant("SO₂", airQuality.so2, 15),
+                        _buildPollutant("PM2.5", airQuality.pm25, 25),
+                        _buildPollutant("PM10", airQuality.pm10, 50),
+                        const Divider(),
+                        _buildBottomSection(airQuality.timestamp),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  _buildAirQualityIndex(airQuality.aqi),
-                  const SizedBox(height: 8),
-                  _buildPollutant("CO", airQuality.aqi * 1.2, 300),
-                  _buildPollutant("NO", airQuality.aqi * 0.1, 1),
-                  _buildPollutant("NO₂", airQuality.aqi * 0.2, 10),
-                  _buildPollutant("O₃", airQuality.aqi * 0.8, 100,
-                      color: Colors.orange),
-                  _buildPollutant("SO₂", airQuality.aqi * 0.3, 15),
-                  _buildPollutant("PM2.5", airQuality.pm25, 25),
-                  _buildPollutant("PM10", airQuality.pm10, 50),
-                  _buildPollutant("NH₃", airQuality.aqi * 0.15, 5),
-                  const SizedBox(height: 12),
-
-                  /// ✅ **زر التحديث + التاريخ والوقت في نفس السطر**
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildTimestamp(airQuality.timestamp),
-                      _buildRefreshButton(), // ✅ زر التحديث في اليمين
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingWidget() {
+    return Center(
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: const Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              const Text(
+                'Loading Air Quality Data...',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text("Error: $error",
+            style: const TextStyle(color: Colors.red, fontSize: 16)),
+      ),
+    );
+  }
+
+  Widget _buildNoDataWidget() {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Text("No data available",
+            style: TextStyle(color: Colors.grey, fontSize: 16)),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        const Icon(Icons.air, color: Colors.green, size: 28),
+        const SizedBox(width: 8),
+        const Text(
+          "Cairo Air Quality",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
+        _buildDataSourceLink(),
+      ],
     );
   }
 
@@ -126,24 +168,28 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
 
     if (aqi > 50) {
       status = "Moderate";
-      color = Colors.yellow;
+      color = Colors.yellow.shade600;
     }
     if (aqi > 100) {
       status = "Unhealthy";
       color = Colors.red;
     }
 
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: LinearProgressIndicator(
-            value: aqi / 200,
-            backgroundColor: Colors.grey.shade300,
-            color: color,
-            minHeight: 8,
-          ),
+        const Text(
+          "Air Quality Index: ",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(height: 8),
+        LinearProgressIndicator(
+          value: (aqi / 200).clamp(0.0, 1.0),
+          backgroundColor: Colors.grey.shade300,
+          color: color,
+          minHeight: 8,
+        ),
+        const SizedBox(height: 4),
         Text(status,
             style: TextStyle(fontWeight: FontWeight.bold, color: color)),
       ],
@@ -153,10 +199,13 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   Widget _buildPollutant(String name, double value, double max,
       {Color color = Colors.green}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         children: [
-          Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(
+              width: 50,
+              child: Text(name,
+                  style: const TextStyle(fontWeight: FontWeight.bold))),
           const SizedBox(width: 8),
           Expanded(
             child: LinearProgressIndicator(
@@ -167,38 +216,36 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
             ),
           ),
           const SizedBox(width: 8),
-          Text("${value.toStringAsFixed(2)} µg/m³",
-              style: const TextStyle(fontSize: 12)),
+          Text("${value.toStringAsFixed(1)} µg/m³",
+              style:
+                  const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
 
-  Widget _buildTimestamp(String timestamp) {
+  Widget _buildBottomSection(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp);
     String formattedDate = DateFormat('yyyy/MM/dd').format(dateTime);
     String formattedTime = DateFormat('HH:mm').format(dateTime);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(formattedDate),
+            Text("Date: $formattedDate",
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text("Time: $formattedTime",
+                style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
-        Row(
-          children: [
-            const Text("Time: ", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(formattedTime),
-          ],
-        ),
+        _buildRefreshButton(),
       ],
     );
   }
 
-  /// 🔄 **زر تحديث البيانات بتدرج لوني**
   Widget _buildRefreshButton() {
     return InkWell(
       onTap: _refreshData,
@@ -206,26 +253,17 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.green.shade300,
-              Colors.blue.shade300
-            ], // ✅ التدرج اللوني
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: Colors.green,
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.refresh, color: Colors.white, size: 20),
-            const SizedBox(width: 8),
-            const Text(
-              "Refresh",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+            Icon(Icons.refresh, color: Colors.white, size: 20),
+            SizedBox(width: 8),
+            Text("Refresh",
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
           ],
         ),
       ),

@@ -40,6 +40,7 @@ class AirQualityWidget extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
+            color: Colors.white,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             elevation: 4,

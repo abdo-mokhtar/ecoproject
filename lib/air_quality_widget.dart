@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ecosensetest/api_service.dart';
+import 'package:ecosensetest/services/api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AirQualityWidget extends StatefulWidget {

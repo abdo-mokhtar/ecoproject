@@ -9,13 +9,15 @@ class AboutPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        title: const Text('About',
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black)),
+        title: const Text(
+          'About',
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -63,12 +65,12 @@ class AboutPage extends StatelessWidget {
       ),
       child: const Row(
         children: [
-          const Icon(Icons.public, color: Colors.white, size: 40),
-          const SizedBox(width: 10),
-          const Expanded(
-            child: const Text(
+          Icon(Icons.public, color: Colors.white, size: 40),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
               'Transforming Environmental Insights into Action',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),

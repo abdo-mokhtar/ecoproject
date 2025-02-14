@@ -1,9 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/material.dart';
 
 class LocationDropdown extends StatelessWidget {
   final List<String> locations = [
-    "Cairo", "Qena", "Red Sea", "Sharqia", "Sohag", "South Sinai", "Suez"
+    "Cairo",
+    "Qena",
+    "Red Sea",
+    "Sharqia",
+    "Sohag",
+    "South Sinai",
+    "Suez"
   ];
 
   @override

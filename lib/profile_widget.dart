@@ -78,14 +78,14 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           Stack(
                             children: [
                               const Padding(
-                                padding: EdgeInsets.fromLTRB(0,50,0,0),
+                                padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
                                 child: CircleAvatar(
                                   radius: 40,
                                   backgroundColor: Colors.white,
                                   child: CircleAvatar(
                                     radius: 38,
-                                    backgroundImage: AssetImage(
-                                        'assets/gif/profile.gif'),
+                                    backgroundImage:
+                                        AssetImage('assets/gif/profile.gif'),
                                   ),
                                 ),
                               ),
@@ -113,7 +113,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           const SizedBox(width: 15),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.fromLTRB(8,80,0,0),
+                              padding: const EdgeInsets.fromLTRB(8, 80, 0, 0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

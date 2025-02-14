@@ -157,22 +157,47 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
               style: TextStyle(fontSize: 14, color: Colors.grey[700]),
             ),
             const SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () {
-                // إعادة تحميل البيانات وعرض واجهة التحميل
-                _refreshData();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                shape: RoundedRectangleBorder(
+            Ink(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.green.shade300, Colors.blue.shade300],
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.green.shade300!, Colors.blue.shade300!],
+                  ),
                   borderRadius: BorderRadius.circular(10),
                 ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.green.shade300!, Colors.blue.shade300!],
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _refreshData();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.transparent, // مهم لجعل التدرج يعمل
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      "Retry",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
+                ),
               ),
-              child: const Text(
-                "Retry",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            )
           ],
         ),
       ),
@@ -324,7 +349,11 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.green,
+          gradient: LinearGradient(
+            colors: [Colors.green.shade300, Colors.blue.shade300],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Row(

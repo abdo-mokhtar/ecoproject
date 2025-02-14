@@ -12,6 +12,8 @@ class LocationDropdown extends StatelessWidget {
     "Suez"
   ];
 
+  LocationDropdown({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +32,7 @@ class LocationDropdown extends StatelessWidget {
               ),
             ),
           ),
-          dropdownDecoratorProps: DropDownDecoratorProps(
+          dropdownDecoratorProps: const DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
               prefixIcon: Icon(Icons.location_on),
             ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class BusinessOnboardingScreen extends StatelessWidget {
   final controller = PageController(viewportFraction: 1, keepPage: true);
 
+  BusinessOnboardingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> pageContent = [

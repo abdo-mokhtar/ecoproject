@@ -4,7 +4,10 @@ import 'package:ecosensetest/services/api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AirQualityWidget extends StatefulWidget {
+  const AirQualityWidget({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _AirQualityWidgetState createState() => _AirQualityWidgetState();
 }
 
@@ -20,7 +23,9 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   void _refreshData() {
     setState(() {
       airQualityFuture = fetchAirQualityData(
-          DateTime.now().subtract(const Duration(days: 7)), DateTime.now());
+        DateTime.now().subtract(const Duration(days: 7)),
+        DateTime.now(),
+      );
     });
   }
 
@@ -46,7 +51,8 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
               child: SingleChildScrollView(
                 child: Card(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   elevation: 4,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -84,13 +90,13 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: const Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: const Column(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 16),
-              const Text(
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text(
                 'Loading Air Quality Data...',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -105,18 +111,70 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Text("Error: $error",
-            style: const TextStyle(color: Colors.red, fontSize: 16)),
+        child: Text(
+          "Error: $error",
+          style: const TextStyle(color: Colors.red, fontSize: 16),
+        ),
       ),
     );
   }
 
   Widget _buildNoDataWidget() {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Text("No data available",
-            style: TextStyle(color: Colors.grey, fontSize: 16)),
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            const BoxShadow(
+              color: Colors.black26,
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(Icons.wifi_off, size: 50, color: Colors.redAccent),
+            const SizedBox(height: 10),
+            const Text(
+              "No Internet Connection",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              "Please check your network settings and try again.",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+            const SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: () {
+                // إعادة تحميل البيانات وعرض واجهة التحميل
+                _refreshData();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Text(
+                "Retry",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -153,7 +211,10 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
           Text(
             "Data Source",
             style: TextStyle(
-                color: Colors.green, fontSize: 14, fontWeight: FontWeight.bold),
+              color: Colors.green,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(width: 4),
           Icon(Icons.open_in_new, size: 16, color: Colors.green),
@@ -190,8 +251,10 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
           minHeight: 8,
         ),
         const SizedBox(height: 4),
-        Text(status,
-            style: TextStyle(fontWeight: FontWeight.bold, color: color)),
+        Text(
+          status,
+          style: TextStyle(fontWeight: FontWeight.bold, color: color),
+        ),
       ],
     );
   }
@@ -203,9 +266,12 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
       child: Row(
         children: [
           SizedBox(
-              width: 50,
-              child: Text(name,
-                  style: const TextStyle(fontWeight: FontWeight.bold))),
+            width: 50,
+            child: Text(
+              name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: LinearProgressIndicator(
@@ -216,9 +282,10 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
             ),
           ),
           const SizedBox(width: 8),
-          Text("${value.toStringAsFixed(1)} µg/m³",
-              style:
-                  const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          Text(
+            "${value.toStringAsFixed(1)} µg/m³",
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
@@ -235,10 +302,14 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Date: $formattedDate",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text("Time: $formattedTime",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              "Date: $formattedDate",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "Time: $formattedTime",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ],
         ),
         _buildRefreshButton(),
@@ -261,9 +332,11 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
           children: [
             Icon(Icons.refresh, color: Colors.white, size: 20),
             SizedBox(width: 8),
-            Text("Refresh",
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+            Text(
+              "Refresh",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),

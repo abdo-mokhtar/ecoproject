@@ -4,6 +4,9 @@ import 'package:ecosensetest/popup_menu.dart';
 import 'package:ecosensetest/search_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:ecosensetest/profile_widget.dart';
+import 'package:ecosensetest/weather_screen.dart';
+
+
 
 void main() {
   runApp(MyApp());
@@ -42,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -88,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen>
         ),
       ),
       bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
         height: 50,
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
@@ -261,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ],
                 )
-              : const Center(child: Text("Weather Data\n(API Only)")),
+              : WeatherScreen(), //const Center(child: Text("Weather Data\n(API Only)")),
         ),
       ],
     );
@@ -333,3 +338,267 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 }
+
+///////////////////////////////////////////////////////////////
+/*import 'package:flutter/material.dart';
+import 'package:ecosensetest/air_quality_widget.dart';
+//import 'package:ecosensetest/notification_screen.dart';
+import 'package:ecosensetest/notification_screen%20.dart';
+import 'package:ecosensetest/popup_menu.dart';
+import 'package:ecosensetest/search_text_field.dart';
+import 'package:ecosensetest/profile_widget.dart';
+import 'package:ecosensetest/weather_screen.dart';
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  bool isAirQualitySelected = true;
+  int _selectedIndex = 0;
+  bool isDarkMode = false;
+  bool isArabic = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            if (_selectedIndex != 1 && _selectedIndex != 2) _buildHeader(),
+            Expanded(child: _buildBody()),
+          ],
+        ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        height: 50,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) {
+          if (index == 3) {
+            _showSettingsBottomSheet();
+          } else {
+            setState(() => _selectedIndex = index);
+          }
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home, color: Colors.green),
+            label: '',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person, color: Colors.green),
+            label: '',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.notifications_outlined),
+            selectedIcon: Icon(Icons.notifications, color: Colors.green),
+            label: '',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings, color: Colors.green),
+            label: '',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset('assets/images/EcoSenseLogo.PNG', height: 30),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => setState(() => _selectedIndex = 1),
+                child: SizedBox(
+                  width: 35,
+                  height: 35,
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/gif/profile.gif',
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              const PopupMenuButtonMenu(),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const SearchTextField(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_selectedIndex == 0) {
+      return _homeContent();
+    } else if (_selectedIndex == 1) {
+      return ProfileWidget();
+    } else if (_selectedIndex == 2) {
+      return NotificationsScreen();
+    } else {
+      return Container();
+    }
+  }
+
+
+
+
+
+  Widget _homeContent() {
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              _buildToggleButton("Air Quality", true),
+              const SizedBox(width: 10),
+              _buildToggleButton("Weather", false),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Expanded(
+          child: isAirQualitySelected
+              ? Column(
+            children: [
+              TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.green,
+                labelColor: Colors.green,
+                unselectedLabelColor: Colors.grey,
+                tabs: const [
+                  Tab(text: "API Data"),
+                  Tab(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Hardware Data"),
+                        SizedBox(width: 5),
+                        Image(
+                          image: AssetImage('assets/images/premium.png'),
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    AirQualityWidget(),
+                    const Center(child: Text("Hardware Data (Sensors)")),
+                  ],
+                ),
+              ),
+            ],
+          )
+              : WeatherScreen(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildToggleButton(String text, bool isAirQuality) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => isAirQualitySelected = isAirQuality),
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: isAirQuality
+                  ? [Colors.green.shade300, Colors.blue.shade300]
+                  : [Colors.blue.shade700, Colors.blue.shade300],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showSettingsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return _buildSettingsPage();
+      },
+    );
+  }
+
+  Widget _buildSettingsPage() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildSwitchTile("Dark mode", isDarkMode, (value) {
+            setState(() => isDarkMode = value);
+          }),
+          const Divider(),
+          _buildSwitchTile("Arabic Language", isArabic, (value) {
+            setState(() => isArabic = value);
+          }),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSwitchTile(String title, bool value, Function(bool) onChanged) {
+    return ListTile(
+      title: Text(title, style: const TextStyle(fontSize: 16)),
+      trailing: Switch(value: value, onChanged: onChanged),
+    );
+  }
+}
+
+ */
+
+

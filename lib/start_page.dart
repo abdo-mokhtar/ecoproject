@@ -36,13 +36,12 @@ class StartPage extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: const EdgeInsets.only(
-                  right: 2.0,
+                  right: 1.0,
                   bottom: 30.0), // Padding to adjust distance from edges
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent, // جعل الخلفية شفافة
-                  shadowColor:
-                      Colors.transparent, // إزالة الظل ليصبح شفافًا بالكامل
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
                 ),
                 onPressed: () {
                   // Navigate to the next screen

@@ -167,14 +167,14 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.green.shade300!, Colors.blue.shade300!],
+                    colors: [Colors.green.shade300, Colors.blue.shade300],
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.green.shade300!, Colors.blue.shade300!],
+                      colors: [Colors.green.shade300, Colors.blue.shade300],
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),

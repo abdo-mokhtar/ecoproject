@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class GovernmentOnboardingScreen extends StatelessWidget {
   final controller = PageController(viewportFraction: 1, keepPage: true);
 
+  GovernmentOnboardingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> pageContent = [

@@ -3,19 +3,29 @@ import 'package:flutter/material.dart';
 class MeetOurTeamPage extends StatelessWidget {
   final List<TeamMember> teamMembers = [
     TeamMember(
-        name: "Abdelrahman Temraz", role: "TL & AI Specialist", imagePath: ""),
+        name: "Abdelrahman Temraz",
+        role: "Team Leader & AI Specialist",
+        imagePath: "assets/images/Temraz.PNG"),
     TeamMember(
         name: "Abdelrahman Mokhtar",
-        role: "UI/UX Designer & Flutter Developer",
-        imagePath: ""),
-    TeamMember(name: "Kholoud Ahmed", role: "Kotlin Developer", imagePath: ""),
+        role: "Flutter Developer",
+        imagePath: "assets/images/Mokhtar.jpg"),
     TeamMember(
-        name: "Abdelrahman Temraz", role: "TL & AI Specialist", imagePath: ""),
+        name: "Kholoud Ahmed",
+        role: "Kotlin Developer",
+        imagePath: "assets/images/Kholoud.jpg"),
     TeamMember(
-        name: "Abdelrahman Mokhtar",
-        role: "UI/UX Designer & Flutter Developer",
-        imagePath: ""),
-    TeamMember(name: "Kholoud Ahmed", role: "Kotlin Developer", imagePath: ""),
+        name: "Mariam Khamees",
+        role: "Back-End Developer",
+        imagePath: "assets/images/Mariam.jpg"),
+    TeamMember(
+        name: "Hamdy Sayed",
+        role: "Frontend Developer",
+        imagePath: "assets/images/Hamdy.jpg"),
+    TeamMember(
+        name: "Abdallah Salah",
+        role: "Hardware Specialist",
+        imagePath: "assets/images/Abdullah.jpg"),
   ];
 
   @override
@@ -24,7 +34,7 @@ class MeetOurTeamPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Meet Our Team",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.green),
@@ -33,6 +43,7 @@ class MeetOurTeamPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
@@ -45,8 +56,9 @@ class MeetOurTeamPage extends StatelessWidget {
               ),
               elevation: 3,
               margin: const EdgeInsets.symmetric(vertical: 10),
+              color: Colors.white,
               child: ListTile(
-                contentPadding: const EdgeInsets.all(16),
+                contentPadding: const EdgeInsets.all(10),
                 leading: CircleAvatar(
                   radius: 30,
                   backgroundImage: member.imagePath.isNotEmpty

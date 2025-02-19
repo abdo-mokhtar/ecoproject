@@ -77,13 +77,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         children: [
                           Stack(
                             children: [
-                              const CircleAvatar(
-                                radius: 40,
-                                backgroundColor: Colors.white,
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
                                 child: CircleAvatar(
-                                  radius: 38,
-                                  backgroundImage: AssetImage(
-                                      'assets/images/EcoSenseLogo.PNG'),
+                                  radius: 40,
+                                  backgroundColor: Colors.white,
+                                  child: CircleAvatar(
+                                    radius: 38,
+                                    backgroundImage:
+                                        AssetImage('assets/gif/profile.gif'),
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -109,27 +112,30 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           ),
                           const SizedBox(width: 15),
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "User Name",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                                ),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: const Text(
-                                    "Usermail@gmail.com",
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 80, 0, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "User Name",
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.blueAccent,
-                                        decoration: TextDecoration.underline),
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
                                   ),
-                                ),
-                              ],
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: const Text(
+                                      "Usermail@gmail.com",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.blueAccent,
+                                          decoration: TextDecoration.underline),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],

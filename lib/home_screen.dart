@@ -1,18 +1,23 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:ecosensetest/air_quality_widget.dart';
 import 'package:ecosensetest/notification_screen%20.dart';
 import 'package:ecosensetest/popup_menu.dart';
 import 'package:ecosensetest/search_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:ecosensetest/profile_widget.dart';
+import 'package:ecosensetest/weather_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),
     );
@@ -20,6 +25,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -42,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -88,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen>
         ),
       ),
       bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
         height: 50,
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
@@ -194,14 +203,14 @@ class _HomeScreenState extends State<HomeScreen>
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.blue.shade700, Colors.blue.shade300],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     alignment: Alignment.center,
                     child: Text(
@@ -253,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen>
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                          AirQualityWidget(),
+                          const AirQualityWidget(),
                           const Center(
                               child: const Text("Hardware Data\n(Sensors)")),
                         ],
@@ -261,20 +270,18 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ],
                 )
-              : const Center(child: Text("Weather Data\n(API Only)")),
+              : const WeatherScreen(),
         ),
       ],
     );
   }
-/******  b00d410f-ee1c-483d-a566-7489ff9988eb  *******/
 
   Widget _buildSettingsPage() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius:
-            const BorderRadius.vertical(top: const Radius.circular(12)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

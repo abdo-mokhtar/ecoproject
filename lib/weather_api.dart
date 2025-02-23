@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 class WeatherApi{
   final String baseUrl="http://api.weatherapi.com/v1/current.json";
 
-
   Future<ApiResponse> getCurrentWeather(String location) async {
     String apiUrl = "$baseUrl?key=$weatherApiKey&q=$location";
     try{

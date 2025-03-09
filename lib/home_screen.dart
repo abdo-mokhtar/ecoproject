@@ -62,8 +62,11 @@ class _HomeScreenState extends State<HomeScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Image.asset('assets/images/EcoSenseLogo.PNG',
-                            height: 30),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset('assets/images/EcoSenseLogo.PNG',
+                              height: 30),
+                        ),
                         const Spacer(),
                         GestureDetector(
                           onTap: () {

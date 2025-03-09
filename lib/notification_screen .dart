@@ -10,12 +10,12 @@ class NotificationsScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
         elevation: 0,
-        automaticallyImplyLeading: false, // إخفاء السهم
-        // centerTitle: true, // توسيط العنوان
-        title: Image.asset(
-          'assets/images/EcoSenseLogo.PNG', // تأكد من صحة المسار
-          height: 30, // ضبط حجم الشعار
+        automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Image.asset('assets/images/EcoSenseLogo.PNG', height: 30),
         ),
       ),
       body: Column(

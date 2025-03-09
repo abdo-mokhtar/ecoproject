@@ -227,13 +227,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return SingleChildScrollView(
       child: Center(
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // يجعل العناصر في المنتصف
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Wrap(
-              alignment: WrapAlignment.center, // يضمن التوسيط في جميع الشاشات
-              spacing: 16, // تباعد أفقي بين العناصر
-              runSpacing: 16, // تباعد عمودي بين العناصر
+              alignment: WrapAlignment.center,
+              spacing: 16,
+              runSpacing: 16,
               children: [
                 _buildDetailBox(
                   "Humidity",
@@ -263,7 +262,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-///////////////////////////////////////////////////////////////////////
   Widget _buildDetailBox(String title, String value, IconData icon) {
     return Container(
       width: 130,

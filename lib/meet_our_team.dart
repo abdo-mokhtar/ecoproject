@@ -32,6 +32,8 @@ class MeetOurTeamPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        elevation: 0,
         title: const Text(
           "Meet Our Team",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
@@ -41,7 +43,6 @@ class MeetOurTeamPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: Colors.white,
-        elevation: 0,
       ),
       backgroundColor: Colors.white,
       body: Padding(

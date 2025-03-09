@@ -16,15 +16,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
   ApiResponse? response;
   bool inProgress = false;
   Location mylocation = Location(
-    name: 'Cairo',
-    region: 'Al Qahirah',
-    country: 'Egypt',
-    lat: 30.05,
-    lon: 31.25,
-    tzId: "Africa/Cairo",
-    localtimeEpoch: 1741458073,
-    localtime: "2025-03-08 20:21"
-  );
+      name: 'Cairo',
+      region: 'Al Qahirah',
+      country: 'Egypt',
+      lat: 30.05,
+      lon: 31.25,
+      tzId: "Africa/Cairo",
+      localtimeEpoch: 1741458073,
+      localtime: "2025-03-08 20:21");
 
   @override
   void initState() {
@@ -41,14 +40,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
       });
 
       // Get weather data including forecast
-      final currentResponse = await myWeather.getWeatherData(mylocation.name, "current.json", false);
-      final forecastResponse = await myWeather.getWeatherData(mylocation.name, "forecast.json", true);
+      final currentResponse = await myWeather.getWeatherData(
+          mylocation.name, "current.json", false);
+      final forecastResponse = await myWeather.getWeatherData(
+          mylocation.name, "forecast.json", true);
 
       final weatherData = ApiResponse(
         location: mylocation,
         current: Current.fromJson(jsonDecode(currentResponse.body)['current']),
-        forecast
-            : Forecast.fromJson(jsonDecode(forecastResponse.body)["forecast"]),
+        forecast:
+            Forecast.fromJson(jsonDecode(forecastResponse.body)["forecast"]),
       );
       setState(() {
         response = weatherData;
@@ -78,7 +79,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             elevation: 4,
             color: Colors.white,
             child: Padding(
@@ -91,7 +93,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     children: [
                       Icon(Icons.cloud_outlined, color: Colors.green, size: 35),
                       SizedBox(width: 5),
-                      Text("Weather", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),
+                      Text("Weather",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25)),
                       Spacer(),
                       Icon(Icons.open_in_new, color: Colors.green),
                     ],
@@ -100,7 +106,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     padding: const EdgeInsets.all(3.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.location_on_outlined, color: Colors.grey, size: 20),
+                        const Icon(Icons.location_on_outlined,
+                            color: Colors.grey, size: 20),
                         const SizedBox(width: 5),
                         DropdownButton<String>(
                           value: mylocation.name,
@@ -135,7 +142,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           ].map((String city) {
                             return DropdownMenuItem<String>(
                               value: city,
-                              child: Text(city, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              child: Text(city,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
                             );
                           }).toList(),
                           onChanged: (String? newValue) {
@@ -149,11 +159,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  inProgress ? const CircularProgressIndicator() : _buildMainWeatherCard(),
+                  inProgress
+                      ? const CircularProgressIndicator()
+                      : _buildMainWeatherCard(),
                   const SizedBox(height: 20),
                   _buildWeatherDetails(),
                   const SizedBox(height: 20),
-                  const Text("24-Hour Forecast", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text("24-Hour Forecast",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   SizedBox(height: 150, child: _buildHourlyForecast()),
                 ],
@@ -177,7 +191,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
         children: [
           Row(
             children: [
-              Text("${response?.current?.tempC?.toInt() ?? '--'}°C", style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.blue)),
+              Text("${response?.current?.tempC?.toInt() ?? '--'}°C",
+                  style: const TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue)),
               const Spacer(),
               //weather image condition
               if (response?.current?.condition?.icon != null)
@@ -189,14 +207,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     height: 80,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.error, size: 40, color: Colors.red);
+                      return const Icon(Icons.error,
+                          size: 40, color: Colors.red);
                     },
                   ),
                 )
             ],
           ),
-          Text("Feels like ${response?.current?.feelslikeC?.toInt() ?? '--'}°C", style: const TextStyle(fontSize: 16, color: Colors.grey)),
-          Text(response?.current?.condition?.text ?? "--", style: const TextStyle(fontSize: 16, color: Color(0xFF757575))),
+          Text("Feels like ${response?.current?.feelslikeC?.toInt() ?? '--'}°C",
+              style: const TextStyle(fontSize: 16, color: Colors.grey)),
+          Text(response?.current?.condition?.text ?? "--",
+              style: const TextStyle(fontSize: 16, color: Color(0xFF757575))),
         ],
       ),
     );
@@ -204,32 +225,35 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   Widget _buildWeatherDetails() {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
       child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment:
+              MainAxisAlignment.center, // يجعل العناصر في المنتصف
           children: [
-            Row(
+            Wrap(
+              alignment: WrapAlignment.center, // يضمن التوسيط في جميع الشاشات
+              spacing: 16, // تباعد أفقي بين العناصر
+              runSpacing: 16, // تباعد عمودي بين العناصر
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(19,0,8,8),
-                  child:_buildDetailBox("Humidity", "${response?.current?.humidity ??'--'}%", Icons.water_drop),
+                _buildDetailBox(
+                  "Humidity",
+                  "${response?.current?.humidity ?? '--'}%",
+                  Icons.water_drop,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8,0,20,8),
-                  child:_buildDetailBox("Wind Speed", "${response?.current?.windKph?.toInt()?? '--'} km/h", Icons.air),
+                _buildDetailBox(
+                  "Wind Speed",
+                  "${response?.current?.windKph?.toInt() ?? '--'} km/h",
+                  Icons.air,
                 ),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(19,8,8,0),
-                  child: _buildDetailBox("Pressure", "${response?.current?.pressureMb?.toInt() ?? '--'} hPa", Icons.speed),
+                _buildDetailBox(
+                  "Pressure",
+                  "${response?.current?.pressureMb?.toInt() ?? '--'} hPa",
+                  Icons.speed,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8,8,20,0),
-                  child: _buildDetailBox("Feels Like", "${response?.current?.feelslikeC?.toInt()?? '--'}°C", Icons.thermostat),
+                _buildDetailBox(
+                  "Feels Like",
+                  "${response?.current?.feelslikeC?.toInt() ?? '--'}°C",
+                  Icons.thermostat,
                 ),
               ],
             ),
@@ -238,6 +262,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
     );
   }
+
 ///////////////////////////////////////////////////////////////////////
   Widget _buildDetailBox(String title, String value, IconData icon) {
     return Container(
@@ -258,17 +283,23 @@ class _WeatherScreenState extends State<WeatherScreen> {
           const SizedBox(height: 5),
           Text(title, style: const TextStyle(fontSize: 14, color: Colors.grey)),
           const SizedBox(height: 2),
-          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(value,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
+
   Widget _buildHourlyForecast() {
     // Get all hourly data from multiple days
     final day1HourlyData = response?.forecast?.forecastday?[0].hour;
     final day2HourlyData = response?.forecast?.forecastday?[1].hour;
 
-    if (day1HourlyData == null || day1HourlyData.isEmpty || day2HourlyData == null || day2HourlyData.isEmpty) {
+    if (day1HourlyData == null ||
+        day1HourlyData.isEmpty ||
+        day2HourlyData == null ||
+        day2HourlyData.isEmpty) {
       return const Center(child: Text('No forecast data available'));
     }
 
@@ -278,15 +309,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ...(day1HourlyData),
       ...(day2HourlyData),
     ].where((hour) {
-      final hourTime = DateTime.fromMillisecondsSinceEpoch((hour.timeEpoch ?? 0) * 1000);
-      return hourTime.isAfter(now) && hourTime.isBefore(now.add(const Duration(hours: 24)));
+      final hourTime =
+          DateTime.fromMillisecondsSinceEpoch((hour.timeEpoch ?? 0) * 1000);
+      return hourTime.isAfter(now) &&
+          hourTime.isBefore(now.add(const Duration(hours: 24)));
     }).toList();
 
     if (next24Hours.isEmpty) {
       return const Center(child: Text('No hourly data available'));
     }
 
-    return Scrollbar( // Wrap with Scrollbar
+    return Scrollbar(
+      // Wrap with Scrollbar
       thumbVisibility: false, // Make the thumb always visible
       thickness: 5, // Adjust thickness
       radius: const Radius.circular(10), // Rounded edges for the scrollbar
@@ -295,8 +329,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
         itemCount: next24Hours.length,
         itemBuilder: (context, index) {
           final hour = next24Hours[index];
-          final hourTime = DateTime.fromMillisecondsSinceEpoch((hour.timeEpoch ?? 0) * 1000);
-          final formattedTime = DateFormat('h a').format(hourTime); // Format to AM/PM
+          final hourTime =
+              DateTime.fromMillisecondsSinceEpoch((hour.timeEpoch ?? 0) * 1000);
+          final formattedTime =
+              DateFormat('h a').format(hourTime); // Format to AM/PM
 
           return Container(
             width: 100,
@@ -308,8 +344,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 color: Colors.lightBlueAccent,
                 width: 1,
               ),
-
-
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -318,7 +352,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 // Time display (h:mm a)
                 Text(
                   formattedTime,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 5),
                 // Weather icon
@@ -332,7 +367,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 // Temperature display
                 Text(
                   '${hour.tempC?.toInt() ?? '--'}°C',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue),
                 ),
                 const SizedBox(height: 5),
                 // Humidity display
@@ -374,10 +412,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
     );
   }
-
-
-
 }
+
 void main() {
   runApp(const MaterialApp(
     home: WeatherScreen(),

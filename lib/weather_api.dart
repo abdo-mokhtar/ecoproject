@@ -18,10 +18,11 @@ class WeatherApi {
       if (response.statusCode == 200) {
         return response;
       } else {
-        throw Exception('Failed to load weather data: ${response.statusCode}');
+        throw Exception(
+            'Failed to load weather data. Please check your internet connection.');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      throw Exception('Error: Please check your internet connection.');
     }
   }
 

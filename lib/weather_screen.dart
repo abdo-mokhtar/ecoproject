@@ -57,7 +57,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       });
     } catch (e) {
       if (kDebugMode) {
-        print('Error details: $e');
+        print('error');
       }
 
       setState(() {
@@ -66,7 +66,25 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
       // Show error message to user
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load weather data: $e')),
+        SnackBar(
+          content: Text(
+            'Error : $e',
+            style: const TextStyle(color: Colors.white), // Text color
+          ),
+          backgroundColor: Colors.red, // Background color
+          behavior: SnackBarBehavior.floating, // Floating effect
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), // Rounded corners
+          ),
+          action: SnackBarAction(
+            label: 'Retry',
+            textColor: Colors.white,
+            onPressed: () {
+              fetchWeatherData(); // Retry fetching data
+            },
+          ),
+          duration: const Duration(seconds: 3), // Auto-dismiss duration
+        ),
       );
     }
   }
@@ -298,7 +316,74 @@ class _WeatherScreenState extends State<WeatherScreen> {
         day1HourlyData.isEmpty ||
         day2HourlyData == null ||
         day2HourlyData.isEmpty) {
-      return const Center(child: Text('No forecast data available'));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'No forecast data available.\nPlease check your internet connection.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 12), // تقليل المسافة بين النص والزرار
+            ElevatedButton(
+              onPressed: () {
+                fetchWeatherData();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent, // مهم لجعل التدرج يعمل
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(8), // تقليل انحناء الزوايا
+                ),
+                padding: EdgeInsets.zero, // إزالة الـ padding الافتراضي
+              ),
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue.shade700, Colors.blue.shade300],
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.blue.shade700, Colors.blue.shade300],
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.blue.shade700, Colors.blue.shade300],
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        fetchWeatherData();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colors.transparent, // مهم لجعل التدرج يعمل
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        "Retry",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     // Filter to get only the next 24 hours

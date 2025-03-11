@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isAirQualitySelected = true;
+
   int _selectedIndex = 0;
 
   bool isDarkMode = false;
@@ -188,9 +189,16 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Center(
-                      child: Text("Air Quality",
-                          style: TextStyle(color: Colors.white, fontSize: 16)),
+                    child: Center(
+                      child: Text(
+                        "Air Quality",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: !isAirQualitySelected
+                                ? FontWeight.bold
+                                : FontWeight.normal),
+                      ),
                     ),
                   ),
                 ),

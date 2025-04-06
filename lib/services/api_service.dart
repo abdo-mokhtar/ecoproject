@@ -1,90 +1,79 @@
 import 'dart:convert';
-import 'dart:math'; // لتوليد بيانات عشوائية
 import 'package:http/http.dart' as http;
 
+// كلاس لتمثيل بيانات جودة الهواء
 class AirQualityData {
   final String timestamp;
-  final double aqi;
+  final double pm10;
+  final double pm25;
   final double co;
   final double no2;
-  final double o3;
   final double so2;
-  final double pm25;
-  final double pm10;
+  final double o3;
+  final double aqi;
 
   AirQualityData({
     required this.timestamp,
-    required this.aqi,
+    required this.pm10,
+    required this.pm25,
     required this.co,
     required this.no2,
-    required this.o3,
     required this.so2,
-    required this.pm25,
-    required this.pm10,
+    required this.o3,
+    required this.aqi,
   });
-
-  // Factory method لتحويل JSON إلى كائن
-  factory AirQualityData.fromJson(Map<String, dynamic> json) {
-    return AirQualityData(
-      timestamp: json['timestamp'],
-      aqi: json['aqi'],
-      co: json['co'],
-      no2: json['no2'],
-      o3: json['o3'],
-      so2: json['so2'],
-      pm25: json['pm25'],
-      pm10: json['pm10'],
-    );
-  }
 }
 
-const String WAQI_TOKEN = 'demo'; // ضع التوكن الحقيقي هنا
-const String WAQI_BASE_URL = 'https://api.waqi.info/feed';
-
+// دالة لجلب البيانات من API
 Future<List<AirQualityData>> fetchAirQualityData(
-    DateTime startDate, DateTime endDate) async {
+    double lat, double lon, double from, double to) async {
+  final url =
+      'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=$lat&longitude=$lon&start=$from&end=$to&hourly=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone';
+
+  print("➡️ Fetching air quality data from: $url");
+
   try {
-    final response =
-        await http.get(Uri.parse('$WAQI_BASE_URL/cairo/?token=$WAQI_TOKEN'));
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+      final json = jsonDecode(response.body);
+      print("✅ Raw API response: $json");
 
-      if (data['status'] != 'ok') {
-        throw Exception('Failed to fetch air quality data');
+      if (json['hourly'] == null || json['hourly']['time'] == null) {
+        print("⚠️ No hourly data in the response!");
+        return [];
       }
 
-      // توليد بيانات تاريخية بناءً على القيم الحالية
-      final days = (endDate.difference(startDate).inHours / 24).ceil();
-      final random = Random();
+      final time = List<String>.from(json['hourly']['time']);
+      final pm10 = List<double>.from(json['hourly']['pm10']);
+      final pm25 = List<double>.from(json['hourly']['pm2_5']);
+      final co = List<double>.from(json['hourly']['carbon_monoxide']);
+      final no2 = List<double>.from(json['hourly']['nitrogen_dioxide']);
+      final so2 = List<double>.from(json['hourly']['sulphur_dioxide']);
+      final o3 = List<double>.from(json['hourly']['ozone']);
 
-      List<AirQualityData> airQualityDataList = List.generate(days, (i) {
-        final date = startDate.add(Duration(days: i));
-        final baseAqi = data['data']['aqi'] ?? 80;
-        final variation = (random.nextDouble() * 20 - 10);
+      List<AirQualityData> data = [];
 
-        return AirQualityData(
-          timestamp: date.toIso8601String(),
-          aqi: (baseAqi + variation).clamp(0, double.infinity),
-          co: (1.2 + random.nextDouble()).clamp(0, double.infinity),
-          no2: (0.8 + random.nextDouble() * 0.4).clamp(0, double.infinity),
-          o3: (0.4 + random.nextDouble() * 0.2).clamp(0, double.infinity),
-          so2: (0.3 + random.nextDouble() * 0.2).clamp(0, double.infinity),
-          pm25: ((data['data']['iaqi']['pm25']?['v'] ?? 25) +
-                  random.nextDouble() * 10)
-              .clamp(0, double.infinity),
-          pm10: ((data['data']['iaqi']['pm10']?['v'] ?? 45) +
-                  random.nextDouble() * 15)
-              .clamp(0, double.infinity),
-        );
-      });
+      for (int i = 0; i < time.length; i++) {
+        data.add(AirQualityData(
+          timestamp: time[i],
+          pm10: pm10[i],
+          pm25: pm25[i],
+          co: co[i],
+          no2: no2[i],
+          so2: so2[i],
+          o3: o3[i],
+          aqi: pm25[i], // ممكن لاحقًا تستخدم دالة حساب AQI حقيقية هنا
+        ));
+      }
 
-      return airQualityDataList;
+      return data;
     } else {
-      throw Exception('Failed to load air quality data');
+      print("❌ API Error: ${response.statusCode}");
+      return [];
     }
-  } catch (error) {
-    print('Error fetching air quality data: $error');
+  } catch (e) {
+    print("❌ Exception occurred: $e");
     return [];
   }
 }

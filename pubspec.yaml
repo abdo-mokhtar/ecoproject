@@ -45,6 +45,8 @@ dependencies:
   url_launcher: ^6.3.1
   dropdown_search: ^5.0.6
   settings_ui: ^2.0.2
+  dropdown_button2: ^2.3.9
+  lucide_icons: ^0.257.0
 
 flutter_icons:
   android: true

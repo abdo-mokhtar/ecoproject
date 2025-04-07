@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ecosensetest/services/api_service.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class AirQualityWidget extends StatefulWidget {
   const AirQualityWidget({super.key});
@@ -279,38 +280,107 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   }
 
   Widget _buildCityDropdown() {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
-      width:
-          150, // Set a specific width for the dropdown to avoid it expanding too much
-      child: DropdownButton<String>(
-        value: selectedCity['name'],
-        icon: const Icon(Icons.arrow_drop_down, color: Colors.green),
-        underline: const SizedBox(),
-        onChanged: (newCityName) {
-          if (newCityName != null) {
-            final newCity = egyptianCities.firstWhere(
-              (city) => city['name'] == newCityName,
-              orElse: () => egyptianCities[0],
-            );
-            setState(() {
-              selectedCity = newCity;
-              _refreshData();
-            });
-          }
-        },
-        items: egyptianCities.map((city) {
-          return DropdownMenuItem<String>(
-            value: city['name'],
-            child: Text(
-              city['name'],
-              style: const TextStyle(
-                color: Colors.green,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
+      width: screenWidth * 0.40, // تقليل العرض
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.white, Colors.grey.shade50],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12), // تقليل الـ Border Radius شوية
+        border: Border.all(color: Colors.green.shade100, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.green.shade50.withOpacity(0.5),
+            blurRadius: 6, // تقليل الـ Blur
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8), // تقليل الـ Padding
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          isExpanded: true,
+          value: selectedCity['name'],
+          hint: Text(
+            'Select City',
+            style: TextStyle(
+              color: Colors.green.shade700,
+              fontSize: 13, // تقليل حجم الخط
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
             ),
-          );
-        }).toList(),
+          ),
+          items: egyptianCities.map((city) {
+            return DropdownMenuItem<String>(
+              value: city['name'],
+              child: Text(
+                city['name'],
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.85),
+                  fontSize: 12, // تقليل حجم الخط
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
+          }).toList(),
+          onChanged: (newCityName) {
+            if (newCityName != null) {
+              final newCity = egyptianCities.firstWhere(
+                (city) => city['name'] == newCityName,
+                orElse: () => egyptianCities[0],
+              );
+              setState(() {
+                selectedCity = newCity;
+                _refreshData();
+              });
+            }
+          },
+          buttonStyleData: ButtonStyleData(
+            height: 40, // تقليل الارتفاع
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 180, // تقليل أقصى ارتفاع للقايمة
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              gradient: LinearGradient(
+                colors: [Colors.white, Colors.grey.shade50],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.green.shade100.withOpacity(0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            elevation: 0,
+            scrollbarTheme: ScrollbarThemeData(
+              radius: const Radius.circular(10),
+              thickness: WidgetStateProperty.all(4), // تقليل سمك الـ Scrollbar
+              thumbColor: WidgetStateProperty.all(Colors.green.shade300),
+            ),
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 40, // تقليل ارتفاع العناصر
+            padding: EdgeInsets.symmetric(horizontal: 12),
+          ),
+          iconStyleData: IconStyleData(
+            icon: Icon(Icons.arrow_drop_down, color: Colors.green.shade700),
+            iconSize: 22, // تقليل حجم الأيقونة
+          ),
+        ),
       ),
     );
   }
@@ -319,22 +389,28 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
     int roundedAQI = aqi.round();
     String status = "Good";
     Color color = Colors.green;
+    IconData icon = LucideIcons.smile;
 
     if (roundedAQI > 50 && roundedAQI <= 100) {
       status = "Moderate";
-      color = Colors.yellow;
+      color = Colors.yellow.shade700;
+      icon = LucideIcons.meh;
     } else if (roundedAQI > 100 && roundedAQI <= 150) {
       status = "Unhealthy for Sensitive Groups";
       color = Colors.orange;
+      icon = LucideIcons.alertTriangle;
     } else if (roundedAQI > 150 && roundedAQI <= 200) {
       status = "Unhealthy";
       color = Colors.red;
+      icon = LucideIcons.frown;
     } else if (roundedAQI > 200 && roundedAQI <= 300) {
       status = "Very Unhealthy";
       color = Colors.purple;
+      icon = LucideIcons.skull;
     } else if (roundedAQI > 300) {
       status = "Hazardous";
       color = Colors.brown;
+      icon = LucideIcons.radiation;
     }
 
     return Column(
@@ -342,28 +418,73 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
       children: [
         const Text(
           "Air Quality Index (AQI)",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
-        const SizedBox(height: 10),
-        Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              "$roundedAQI - $status",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: color,
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: color, width: 1.5),
+          ),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: color.withOpacity(0.2),
+                child: Icon(icon, color: color, size: 28),
               ),
-            ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "$roundedAQI - $status",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _getStatusDescription(status),
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black87),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
+  }
+
+  String _getStatusDescription(String status) {
+    switch (status) {
+      case "Good":
+        return "Air quality is satisfactory.";
+      case "Moderate":
+        return "Air quality is acceptable.";
+      case "Unhealthy for Sensitive Groups":
+        return "Sensitive groups may experience effects.";
+      case "Unhealthy":
+        return "Everyone may begin to experience effects.";
+      case "Very Unhealthy":
+        return "Health alert: emergency conditions.";
+      case "Hazardous":
+        return "Serious health effects for everyone.";
+      default:
+        return "";
+    }
   }
 
   Widget _buildPollutant(String name, double value, double max,

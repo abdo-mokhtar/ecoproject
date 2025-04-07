@@ -4,6 +4,7 @@ import 'package:ecosensetest/air_quality_widget.dart';
 import 'package:ecosensetest/notification_screen%20.dart';
 import 'package:ecosensetest/popup_menu.dart';
 import 'package:ecosensetest/search_text_field.dart';
+import 'package:ecosensetest/settings_page.dart' show SettingsPage;
 import 'package:flutter/material.dart';
 import 'package:ecosensetest/profile_widget.dart';
 import 'package:ecosensetest/weather_screen.dart';
@@ -146,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return _buildSettingsPage();
+        return SettingsPage();
       },
     );
   }

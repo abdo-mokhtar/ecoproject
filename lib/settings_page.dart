@@ -14,22 +14,24 @@ class _SettingsPageState extends State<SettingsPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text("Settings"),
-        centerTitle: true,
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-        elevation: 4,
-        shape: const RoundedRectangleBorder(
-          borderRadius: const BorderRadius.only(
-            bottomLeft: const Radius.circular(24),
-            bottomRight: const Radius.circular(24),
+      backgroundColor: Colors.white,
+
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 35.0), // 👈 Padding from the top
+          child: AppBar(
+            title: const Text("Settings"),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.green,
+            //elevation: 4,
           ),
         ),
       ),
+
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(10,0,10,10),
         children: [
           _buildSectionTitle("Preferences"),
           _buildDarkModeTile(),

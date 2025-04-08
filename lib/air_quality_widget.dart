@@ -71,6 +71,7 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: FutureBuilder(
           future: airQualityFuture,
           builder: (context, AsyncSnapshot<List<AirQualityData>> snapshot) {
@@ -98,6 +99,7 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: 4,
+                  color: Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -254,29 +256,35 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   Widget _buildHeader() {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Icon(Icons.air, color: Colors.green, size: 28),
-        const SizedBox(width: 8),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(Icons.air, color: Colors.green, size: 28),
+            const SizedBox(width: 8),
 
-        // City name + Air Quality with Expanded to take full available width
-        Expanded(
-          child: Text(
-            "${selectedCity['name']} Air Quality",
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            // City name + Air Quality with Expanded to take full available width
+            Expanded(
+              child:Text(
+                "${selectedCity['name']} Air Quality",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-
-        const SizedBox(width: 8), // Provide spacing to avoid tight layout
-
-        // City Dropdown
-        _buildCityDropdown(),
-      ],
+         Padding(
+           padding: EdgeInsets.all(10.0),
+           // City Dropdown
+          child: _buildCityDropdown(),
+         )
+        ]
     );
+
   }
 
   Widget _buildCityDropdown() {
@@ -416,17 +424,19 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 10),
         const Text(
           "Air Quality Index (AQI)",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 13,
+            color: Colors.black87,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 5),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: color.withOpacity(0.1),
             borderRadius: BorderRadius.circular(16),
@@ -492,12 +502,12 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
+        const SizedBox(height: 4),
         Text(
           name,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 1),
         LinearProgressIndicator(
           value: (value / max).clamp(0.0, 1.0),
           backgroundColor: Colors.grey.shade300,

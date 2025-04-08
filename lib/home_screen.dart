@@ -67,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen>
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Image.asset('assets/images/EcoSenseLogo.PNG',
-                              height: 30),
+                              height: 30,
+                          ),
                         ),
                         const Spacer(),
                         GestureDetector(
@@ -91,8 +92,25 @@ class _HomeScreenState extends State<HomeScreen>
                         const PopupMenuButtonMenu(),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    const SearchTextField(),
+                    const SizedBox(height: 5),
+                    ///////////////////////////////
+                    Container(
+                      width: double.infinity,
+                      //fit: BoxFit.cover, // أو BoxFit.fill حسب التأثير المطلوب
+                      // width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20), // التحكم في الزوايا
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(
+                          'assets/gif/background2.gif',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                   // const SearchTextField(),
                   ],
                 ),
               ),
@@ -181,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen>
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.fromLTRB(0,20,0,20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.green.shade300, Colors.blue.shade300],
@@ -197,8 +215,8 @@ class _HomeScreenState extends State<HomeScreen>
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: !isAirQualitySelected
-                                ? FontWeight.bold
-                                : FontWeight.normal),
+                                ? FontWeight.normal
+                                : FontWeight.bold),
                       ),
                     ),
                   ),
@@ -215,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen>
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(0,20,0,20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.blue.shade700, Colors.blue.shade300],

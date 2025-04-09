@@ -525,8 +525,8 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
 
   Widget _buildBottomSection(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp);
-    String formattedDate = DateFormat('yyyy/MM/dd').format(dateTime);
-    String formattedTime = DateFormat('HH:mm').format(dateTime);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    String formattedTime = DateFormat('hh:mm a').format(DateTime.now());
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -56,7 +56,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   },
                 ),
                 SizedBox(width: 75),
-                SizedBox(width: 4), // مسافة بين الأيقونة والنص
                 const Center(
                   child: Text(
                     "Profile",
@@ -71,21 +70,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             ),
           ),
         ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         Expanded(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -95,14 +79,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(
                   padding: EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    bottom: MediaQuery.of(context).viewInsets.bottom + 16, // يحرك الشاشة عند ظهور الكيبورد
+                    left: 15,
+                    right: 15,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 10, // يحرك الشاشة عند ظهور الكيبورد
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 20),
                       // Profile Header
                       Container(
                         width: double.infinity,
@@ -112,20 +95,20 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(25),
                         ),
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.fromLTRB(18,0,18,5),
                         child: Row(
                           children: [
                             Stack(
                               children: [
                                 const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 45, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                                   child: CircleAvatar(
-                                    radius: 45,
+                                    radius: 40,
                                     backgroundColor: Colors.white,
                                     child: CircleAvatar(
-                                      radius: 38,
+                                      radius: 35,
                                       backgroundImage:
                                       AssetImage('assets/gif/profile.gif'),
                                     ),
@@ -155,7 +138,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             const SizedBox(width: 15),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 80, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(8, 75, 0, 0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -215,7 +198,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                 ),
                                 onPressed: () {},
                                 child: const Text(
-                                  "Update",
+                                  "Update Profile",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16),
                                 ),

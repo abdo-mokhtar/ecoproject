@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ecosensetest/home_screen.dart';
 
 class NotificationsScreen extends StatelessWidget {
   final List<String> notifications =
@@ -8,33 +9,31 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Image.asset('assets/images/EcoSenseLogo.PNG', height: 30),
-        ),
-      ),
       body: Column(
         children: [
-          /// إضافة الـ Row أسفل الـ AppBar مباشرة
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+           Padding(
+            padding: EdgeInsets.symmetric(vertical: 25, horizontal: 14),
             child: Center(
               child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // المحاذاة إلى اليسار
+                mainAxisAlignment: MainAxisAlignment.start, // المحاذاة إلى اليسار
                 children: [
-                  Icon(Icons.notifications, color: Colors.orange, size: 24),
-                  SizedBox(width: 8), // مسافة بين الأيقونة والنص
-                  Center(
+                  IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.green, size: 40),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()), // Replace with your screen
+                      );
+                    },
+                  ),
+                  SizedBox(width: 80),
+                  Icon(Icons.tips_and_updates, color: Colors.orange, size: 24),
+                  SizedBox(width: 4), // مسافة بين الأيقونة والنص
+                  const Center(
                     child: Text(
-                      "Notifications",
+                      "Tips",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -91,32 +90,7 @@ class NotificationsScreen extends StatelessWidget {
           ),
 
           /// زر "Clear All"
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: ElevatedButton(
-              onPressed: () {
-                // وظيفة حذف كل الإشعارات
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                minimumSize: const Size(120, 40),
-                elevation: 2,
-              ),
-              child: const Text(
-                "Clear All",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
+
         ],
       ),
     );

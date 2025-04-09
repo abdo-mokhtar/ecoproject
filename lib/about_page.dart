@@ -90,7 +90,7 @@ class _AboutPageContent extends StatelessWidget {
           ),
           SizedBox(height: AboutPage._spacing),
           _ContentSection(
-            title: 'UN Sustainable Development Goals',
+            title: 'UN SDG',
             icon: Icons.eco,
             content:
                 'SDG 3: Health and Well-being\nEnsuring healthy lives and promoting well-being for all.\n\nSDG 11: Sustainable Cities\nAdvanced machine learning algorithms process the data to identify patterns and predict future trends.\n\nSDG 13: Climate Action\nUsers receive personalized recommendations and alerts through our intuitive interface.',

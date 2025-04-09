@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ecosensetest/home_screen.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -15,48 +16,71 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 35.0), // 👈 Padding from the top
-          child: AppBar(
-            title: const Text("Settings"),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.green,
-            //elevation: 4,
-          ),
-        ),
-      ),
-
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(10,0,10,10),
+      body:Stack(
         children: [
-          _buildSectionTitle("Preferences"),
-          _buildDarkModeTile(),
-          _buildLanguageTile(), // إضافة اختيار اللغة
-          const SizedBox(height: 24),
-          _buildSectionTitle("App Info"),
-          _buildTile(
-            icon: Icons.info_outline,
-            title: "About App",
-            onTap: () {
-              showAboutDialog(
-                context: context,
-                applicationName: "EcoSense",
-                applicationVersion: "1.0.0",
-                applicationIcon: const Icon(Icons.eco, size: 40),
-                children: const [
-                  Text("An app to track air quality and environmental data."),
-                ],
-              );
-            },
+          Positioned.fill(
+            child: Center(
+              child: ListView(
+              padding: const EdgeInsets.fromLTRB(15,150,10,15),
+              children: [
+                _buildSectionTitle("Preferences"),
+                _buildDarkModeTile(),
+                _buildLanguageTile(), // إضافة اختيار اللغة
+                const SizedBox(height: 24),
+                _buildSectionTitle("App Info"),
+                _buildTile(
+                  icon: Icons.info_outline,
+                  title: "About App",
+                  onTap: () {
+                    showAboutDialog(
+                      context: context,
+                      applicationName: "EcoSense",
+                      applicationVersion: "1.0.0",
+                      applicationIcon: const Icon(Icons.eco, size: 40),
+                      children: const [
+                        Text("An app to track air quality and environmental data."),
+                      ],
+                    );
+                  },
+                ),
+                _buildTile(
+                  icon: Icons.close,
+                  title: "Close Settings",
+                  onTap: () => Navigator.pop(context),
+                ),
+              ],
+            ),),
           ),
-          _buildTile(
-            icon: Icons.close,
-            title: "Close Settings",
-            onTap: () => Navigator.pop(context),
+          Positioned(
+            top: 50, // control position here
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.white,
+             // padding: const EdgeInsets.fromLTRB(16,16,16,0),
+              child:  Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.green, size: 40),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()), // Replace with your screen
+                      );
+                    },
+                  ),
+                  SizedBox(width: 65),
+                  Icon(Icons.settings, color: Colors.grey),
+                  SizedBox(width: 4),
+                  Text(
+                    "Setting",
+                    style: TextStyle(color: Colors.black, fontSize: 30,fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -205,3 +229,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
+
+////////////

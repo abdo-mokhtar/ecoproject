@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       bottomNavigationBar: NavigationBar(
         backgroundColor: Colors.white,
-        height: 50,
+        height: 55,
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
           if (index == 3) {
@@ -135,22 +135,22 @@ class _HomeScreenState extends State<HomeScreen>
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home, color: Colors.green),
-            label: '',
+            label: 'Home',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
             selectedIcon: Icon(Icons.person, color: Colors.green),
-            label: '',
+            label: 'Profile',
           ),
           NavigationDestination(
-            icon: Icon(Icons.notifications_outlined),
-            selectedIcon: Icon(Icons.notifications, color: Colors.green),
-            label: '',
+            icon: Icon(Icons.tips_and_updates),
+            selectedIcon: Icon(Icons.tips_and_updates, color: Colors.green),
+            label: 'Tips',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),
             selectedIcon: Icon(Icons.settings, color: Colors.green),
-            label: '',
+            label: 'Setting',
           ),
         ],
       ),

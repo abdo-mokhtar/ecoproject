@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ecosensetest/home_screen.dart';
 
 class ProfileWidget extends StatefulWidget {
   @override
@@ -30,165 +31,209 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset:
-          true, // هذا يجعل الشاشة تتحرك تلقائياً عند ظهور الكيبورد
+      //resizeToAvoidBottomInset: true, // هذا يجعل الشاشة تتحرك تلقائياً عند ظهور الكيبورد
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Image.asset('assets/images/EcoSenseLogo.PNG', height: 30),
-        ),
-      ),
+
+
       body: GestureDetector(
         onTap: () => FocusScope.of(context)
             .unfocus(), // لإغلاق الكيبورد عند النقر خارج الحقول
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              controller: _scrollController, // ربط الـ ScrollController
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  bottom: MediaQuery.of(context).viewInsets.bottom +
-                      16, // يحرك الشاشة عند ظهور الكيبورد
+        child:Column(
+    children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 25, horizontal: 14),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start, // المحاذاة إلى اليسار
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.green, size: 40),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()), // Replace with your screen
+                    );
+                  },
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 10),
-                    // Profile Header
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF62D0A2), Color(0xFF4BC0E3)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Stack(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                                child: CircleAvatar(
-                                  radius: 40,
-                                  backgroundColor: Colors.white,
-                                  child: CircleAvatar(
-                                    radius: 38,
-                                    backgroundImage:
-                                        AssetImage('assets/gif/profile.gif'),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 5,
-                                right: 5,
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 4,
-                                        offset: Offset(0, 2),
-                                      )
-                                    ],
-                                  ),
-                                  child: const Icon(Icons.edit,
-                                      size: 18, color: Colors.green),
-                                ),
-                              ),
-                            ],
+                SizedBox(width: 75),
+                SizedBox(width: 4), // مسافة بين الأيقونة والنص
+                const Center(
+                  child: Text(
+                    "Profile",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                controller: _scrollController, // ربط الـ ScrollController
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 16, // يحرك الشاشة عند ظهور الكيبورد
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      // Profile Header
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF62D0A2), Color(0xFF4BC0E3)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                          const SizedBox(width: 15),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 80, 0, 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "User Name",
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: const Text(
-                                      "Usermail@gmail.com",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.blueAccent,
-                                          decoration: TextDecoration.underline),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            Stack(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 45, 0, 0),
+                                  child: CircleAvatar(
+                                    radius: 45,
+                                    backgroundColor: Colors.white,
+                                    child: CircleAvatar(
+                                      radius: 38,
+                                      backgroundImage:
+                                      AssetImage('assets/gif/profile.gif'),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                Positioned(
+                                  bottom: 5,
+                                  right: 5,
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2),
+                                        )
+                                      ],
+                                    ),
+                                    child: const Icon(Icons.edit,
+                                        size: 18, color: Colors.green),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Form Fields
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        children: [
-                          _buildTextField("New User Name", "Enter User name"),
-                          const SizedBox(height: 10),
-                          _buildTextField("New E-mail", "Enter E-mail"),
-                          const SizedBox(height: 10),
-                          _buildPhoneField(), // حقل New phone مع تمرير تلقائي
-                          const SizedBox(height: 10),
-                          _buildPasswordField(), // إدخال كلمة المرور مع أيقونة العين
-                          const SizedBox(height: 20),
-                          // Update Button
-                          SizedBox(
-                            width: double.infinity,
-                            height: 45,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF62D0A2),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(8, 80, 0, 0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "User Name",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: const Text(
+                                        "Usermail@gmail.com",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              onPressed: () {},
-                              child: const Text(
-                                "Update",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Form Fields
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          children: [
+                            _buildTextField("New User Name", "Enter User name"),
+                            const SizedBox(height: 10),
+                            _buildTextField("New E-mail", "Enter E-mail"),
+                            const SizedBox(height: 10),
+                            _buildPhoneField(), // حقل New phone مع تمرير تلقائي
+                            const SizedBox(height: 10),
+                            _buildPasswordField(), // إدخال كلمة المرور مع أيقونة العين
+                            const SizedBox(height: 20),
+                            // Update Button
+                            SizedBox(
+                              width: double.infinity,
+                              height: 45,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF62D0A2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: const Text(
+                                  "Update",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
+    ],
+    ),
+    ),
     );
   }
 

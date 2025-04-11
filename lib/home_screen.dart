@@ -1,5 +1,5 @@
 import 'package:ecosensetest/air_quality_widget.dart';
-import 'package:ecosensetest/notification_screen%20.dart';
+import 'package:ecosensetest/tips_screen%20.dart';
 import 'package:ecosensetest/popup_menu.dart';
 import 'package:ecosensetest/settings_page.dart' show SettingsPage;
 import 'package:flutter/material.dart';
@@ -298,37 +298,6 @@ class _HomeScreenState extends State<HomeScreen>
               : const WeatherScreen(),
         ),
       ],
-    );
-  }
-
-  Widget _buildSwitchTile(String title, bool value, Function(bool) onChanged) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          const BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeColor: Colors.blue,
-          ),
-        ],
-      ),
     );
   }
 }

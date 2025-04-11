@@ -254,8 +254,6 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   }
 
   Widget _buildHeader() {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -520,7 +518,7 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   }
 
   Widget _buildBottomSection(String timestamp) {
-    DateTime dateTime = DateTime.parse(timestamp);
+    DateTime.parse(timestamp);
     String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     String formattedTime = DateFormat('hh:mm a').format(DateTime.now());
 

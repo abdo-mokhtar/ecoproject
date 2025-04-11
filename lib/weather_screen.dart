@@ -9,7 +9,7 @@ import 'package:dropdown_button2/dropdown_button2.dart'
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ecosensetest/weather_api.dart';
-import 'package:ecosensetest/weathermodel.dart';
+import 'package:ecosensetest/weather_model.dart';
 import 'package:intl/intl.dart';
 
 class WeatherScreen extends StatefulWidget {

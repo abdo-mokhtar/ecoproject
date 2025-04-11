@@ -13,115 +13,140 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      backgroundColor: Colors.grey.shade50,
+      body: Column(
         children: [
-          Positioned.fill(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 140, 20, 20),
-              children: [
-                _buildSectionTitle("Preferences"),
-                _buildDarkModeTile(),
-                _buildLanguageTile(),
-                const SizedBox(height: 30),
-                _buildSectionTitle("App Info"),
-                _buildTile(
-                  icon: Icons.info_outline,
-                  title: "About App",
-                  onTap: () {
-                    showAboutDialog(
-                      context: context,
-                      applicationName: "EcoSense",
-                      applicationVersion: "v1.0.0",
-                      applicationIcon: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade50,
-                          shape: BoxShape.circle,
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        child: const Icon(Icons.eco,
-                            size: 40, color: Colors.green),
-                      ),
-                      children: [
-                        const SizedBox(height: 16),
-                        Text(
-                          "EcoSense is an environmental monitoring app designed to help you track real-time air quality and environmental data in your city.",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade800,
-                            height: 1.5,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          "Developed with 💚 using Flutter.",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.green.shade700,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                _buildTile(
-                  icon: Icons.close,
-                  title: "Close Settings",
-                  onTap: () => Navigator.pop(context),
-                ),
-              ],
+          _buildAppBar(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionTitle("Preferences", Icons.tune),
+                  const SizedBox(height: 10),
+                  _buildDarkModeTile(),
+                  const SizedBox(height: 12),
+                  _buildLanguageTile(),
+                  const SizedBox(height: 30),
+                  _buildSectionTitle("App Info", Icons.info),
+                  const SizedBox(height: 10),
+                  _buildAboutTile(),
+                  const SizedBox(height: 12),
+                  _buildCloseTile(),
+                ],
+              ),
             ),
           ),
-          _buildAppBar(),
         ],
       ),
     );
   }
 
   Widget _buildAppBar() {
-    return Positioned(
-      top: 50,
-      left: 16,
-      right: 16,
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.green, size: 30),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            },
+    return Container(
+      padding: const EdgeInsets.only(top: 50, bottom: 20, left: 20, right: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
-          const Spacer(),
-          const Icon(Icons.settings, color: Colors.green),
-          const SizedBox(width: 8),
-          const Text(
-            "Settings",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.green,
-            ),
-          ),
-          const Spacer(flex: 2),
         ],
+      ),
+      child: Container(
+        padding:
+            const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 0.5,
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            /// العنوان في المنتصف بالضبط
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.settings, color: Colors.green.shade700, size: 26),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Settings",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green.shade800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            /// زر الرجوع على اليسار
+            Align(
+              alignment: Alignment.centerLeft,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(30),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [Colors.green.shade200, Colors.green.shade50],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.green.withOpacity(0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.arrow_back,
+                      color: Colors.green, size: 24),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.green.shade800,
+  Widget _buildSectionTitle(String title, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.green.shade600, size: 22),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.green.shade800,
+            letterSpacing: 0.5,
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -130,71 +155,316 @@ class _SettingsPageState extends State<SettingsPage> {
     required String title,
     Widget? trailing,
     VoidCallback? onTap,
+    Color? iconColor,
   }) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: ListTile(
-        leading: Icon(icon, color: Colors.green),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.green.shade50,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: iconColor ?? Colors.green.shade600),
+        ),
         title: Text(
           title,
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.green.shade800,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey.shade800,
           ),
         ),
         trailing: trailing,
         onTap: onTap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }
 
   Widget _buildDarkModeTile() {
     return _buildTile(
-      icon: Icons.dark_mode,
+      icon: isDarkMode ? Icons.nights_stay_rounded : Icons.wb_sunny_rounded,
       title: "Dark Mode",
-      trailing: Switch(
-        value: isDarkMode,
-        onChanged: (value) {
+      iconColor:
+          isDarkMode ? Colors.deepPurple.shade400 : Colors.orange.shade400,
+      trailing: GestureDetector(
+        onTap: () {
           setState(() {
-            isDarkMode = value;
+            isDarkMode = !isDarkMode;
           });
         },
-        activeColor: Colors.green,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          width: 55,
+          height: 28,
+          padding: const EdgeInsets.symmetric(horizontal: 3),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            gradient: LinearGradient(
+              colors: isDarkMode
+                  ? [Colors.deepPurple.shade400, Colors.black87]
+                  : [Colors.yellow.shade600, Colors.orange.shade400],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDarkMode
+                    ? Colors.deepPurple.withOpacity(0.3)
+                    : Colors.orange.withOpacity(0.3),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: AnimatedAlign(
+            duration: const Duration(milliseconds: 300),
+            alignment:
+                isDarkMode ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 2,
+                  )
+                ],
+              ),
+              child: Icon(
+                isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                size: 14,
+                color: isDarkMode
+                    ? Colors.deepPurple.shade700
+                    : Colors.orange.shade600,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildLanguageTile() {
     return _buildTile(
-      icon: Icons.language,
+      icon: Icons.translate,
       title: "Language",
       trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
         decoration: BoxDecoration(
           color: Colors.green.shade50,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.green.shade300),
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.green.shade200),
         ),
-        child: DropdownButton<String>(
-          value: selectedLanguage,
-          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.green),
-          underline: const SizedBox(),
-          items: ['English', 'Arabic'].map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child:
-                  Text(value, style: TextStyle(color: Colors.green.shade800)),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedLanguage = newValue!;
-            });
-          },
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: selectedLanguage,
+            borderRadius: BorderRadius.circular(16),
+            icon: Icon(Icons.keyboard_arrow_down_rounded,
+                color: Colors.green.shade600),
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.green.shade800,
+              fontWeight: FontWeight.w500,
+            ),
+            dropdownColor: Colors.white,
+            items: ['English', 'Arabic'].map((String language) {
+              return DropdownMenuItem<String>(
+                value: language,
+                child: Row(
+                  children: [
+                    Icon(
+                      language == 'English'
+                          ? Icons.language
+                          : Icons.translate_rounded,
+                      color: Colors.green.shade400,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(language),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  selectedLanguage = newValue;
+                });
+              }
+            },
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAboutTile() {
+    return _buildTile(
+      icon: Icons.help_outline,
+      title: "About App",
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    /// Header مع أيقونة
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.green.shade100, Colors.green.shade50],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child:
+                          const Icon(Icons.eco, size: 40, color: Colors.green),
+                    ),
+                    const SizedBox(height: 16),
+
+                    /// اسم التطبيق والإصدار
+                    Text(
+                      "EcoSense",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Version 1.0.0",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+
+                    const Divider(height: 32),
+
+                    /// وصف التطبيق
+                    Text(
+                      "EcoSense is an environmental monitoring app designed to help you track real-time air quality and environmental data in your city.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey.shade800,
+                        height: 1.6,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    /// إشعار التطوير
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.favorite,
+                            size: 16, color: Colors.green),
+                        const SizedBox(width: 6),
+                        Text(
+                          "Developed with Flutter",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.green.shade700,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
+                    /// زر الإغلاق
+                    SizedBox(
+                      width: double.infinity,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(30),
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.green.shade400,
+                                Colors.green.shade600
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.green.withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: const [
+                              Icon(Icons.close, size: 20, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text(
+                                "Close",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildCloseTile() {
+    return _buildTile(
+      icon: Icons.exit_to_app,
+      title: "Close Settings",
+      iconColor: Colors.red.shade400,
+      onTap: () => Navigator.pop(context),
     );
   }
 }

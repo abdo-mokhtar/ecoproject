@@ -1,4 +1,11 @@
 import 'dart:convert';
+import 'package:dropdown_button2/dropdown_button2.dart'
+    show
+        ButtonStyleData,
+        DropdownButton2,
+        DropdownStyleData,
+        IconStyleData,
+        MenuItemStyleData;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ecosensetest/weather_api.dart';
@@ -125,53 +132,146 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     child: Row(
                       children: [
                         const Icon(Icons.location_on_outlined,
-                            color: Colors.grey, size: 20),
-                        const SizedBox(width: 5),
-                        DropdownButton<String>(
-                          value: mylocation.name,
-                          items: [
-                            "Alexandria",
-                            "Aswan",
-                            "Asyut",
-                            "Beheira",
-                            "Beni Suef",
-                            "Cairo",
-                            "Dakahlia",
-                            "Damietta",
-                            "Faiyum",
-                            "Gharbia",
-                            "Giza",
-                            "Ismailia",
-                            "Kafr El Sheikh",
-                            "Luxor",
-                            "Matrouh",
-                            "Minya",
-                            "Monufia",
-                            "New Valley",
-                            "North Sinai",
-                            "Port Said",
-                            "Qalyubia",
-                            "Qena",
-                            "Red Sea",
-                            "Sharqia",
-                            "Sohag",
-                            "South Sinai",
-                            "Suez"
-                          ].map((String city) {
-                            return DropdownMenuItem<String>(
-                              value: city,
-                              child: Text(city,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              mylocation.name = newValue!;
-                              fetchWeatherData();
-                            });
-                          },
+                            color: Color(0xFF4CAF50), // أخضر أساسي
+                            size: 22), // زيادة حجم الأيقونة قليلاً
+                        const SizedBox(width: 8), // زيادة المسافة
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            value: mylocation.name,
+                            hint: Text(
+                              'Select City',
+                              style: TextStyle(
+                                color: Colors.green.shade800, // أخضر داكن
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            items: [
+                              "Alexandria",
+                              "Aswan",
+                              "Asyut",
+                              "Beheira",
+                              "Beni Suef",
+                              "Cairo",
+                              "Dakahlia",
+                              "Damietta",
+                              "Faiyum",
+                              "Gharbia",
+                              "Giza",
+                              "Ismailia",
+                              "Kafr El Sheikh",
+                              "Luxor",
+                              "Matrouh",
+                              "Minya",
+                              "Monufia",
+                              "New Valley",
+                              "North Sinai",
+                              "Port Said",
+                              "Qalyubia",
+                              "Qena",
+                              "Red Sea",
+                              "Sharqia",
+                              "Sohag",
+                              "South Sinai",
+                              "Suez"
+                            ].map((String city) {
+                              return DropdownMenuItem<String>(
+                                value: city,
+                                child: Text(
+                                  city,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade800, // رمادي داكن
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                setState(() {
+                                  mylocation.name = newValue;
+                                  fetchWeatherData();
+                                });
+                              }
+                            },
+                            buttonStyleData: ButtonStyleData(
+                              height: 46,
+                              width: 200,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color:
+                                      Colors.green.shade300, // أخضر فاتح للحدود
+                                  width: 1.5,
+                                ),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        Colors.green.shade100, // ظل أخضر فاتح
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            dropdownStyleData: DropdownStyleData(
+                              maxHeight: 300,
+                              width: 220,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        Colors.green.shade100.withOpacity(0.3),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.green.shade50, // أخضر فاتح جداً
+                                    Colors.white,
+                                  ],
+                                ),
+                              ),
+                              offset: const Offset(0, -5),
+                            ),
+                            iconStyleData: IconStyleData(
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.green.shade800, // أخضر داكن
+                                size: 28,
+                              ),
+                              openMenuIcon: Icon(
+                                Icons.arrow_drop_up,
+                                color: Colors.green.shade800,
+                              ),
+                            ),
+                            menuItemStyleData: MenuItemStyleData(
+                              height: 48,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              overlayColor:
+                                  WidgetStateProperty.resolveWith<Color>(
+                                (states) {
+                                  if (states.contains(WidgetState.hovered)) {
+                                    return Colors.green
+                                        .shade50; // تأثير أخضر فاتح عند hover
+                                  }
+                                  return Colors.transparent;
+                                },
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),

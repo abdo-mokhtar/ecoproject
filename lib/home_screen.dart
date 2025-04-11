@@ -1,9 +1,6 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:ecosensetest/air_quality_widget.dart';
 import 'package:ecosensetest/notification_screen%20.dart';
 import 'package:ecosensetest/popup_menu.dart';
-import 'package:ecosensetest/search_text_field.dart';
 import 'package:ecosensetest/settings_page.dart' show SettingsPage;
 import 'package:flutter/material.dart';
 import 'package:ecosensetest/profile_widget.dart';
@@ -66,8 +63,9 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Image.asset('assets/images/EcoSenseLogo.PNG',
-                              height: 30,
+                          child: Image.asset(
+                            'assets/images/EcoSenseLogo.PNG',
+                            height: 30,
                           ),
                         ),
                         const Spacer(),
@@ -93,14 +91,12 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                     const SizedBox(height: 5),
-                    ///////////////////////////////
                     Container(
                       width: double.infinity,
-                      //fit: BoxFit.cover, // أو BoxFit.fill حسب التأثير المطلوب
-                      // width: MediaQuery.of(context).size.width * 0.8,
-                      height: MediaQuery.of(context).size.height * 0.2,
+                      height: MediaQuery.of(context).size.height *
+                          0.10, // تقليل الحجم
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20), // التحكم في الزوايا
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
@@ -109,8 +105,7 @@ class _HomeScreenState extends State<HomeScreen>
                           fit: BoxFit.cover,
                         ),
                       ),
-                    )
-                   // const SearchTextField(),
+                    ),
                   ],
                 ),
               ),
@@ -199,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen>
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(0,20,0,20),
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.green.shade300, Colors.blue.shade300],
@@ -233,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen>
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(0,20,0,20),
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.blue.shade700, Colors.blue.shade300],

@@ -256,35 +256,31 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   Widget _buildHeader() {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(Icons.air, color: Colors.green, size: 28),
-            const SizedBox(width: 8),
+          const Icon(Icons.air, color: Colors.green, size: 28),
+          const SizedBox(width: 8),
 
-            // City name + Air Quality with Expanded to take full available width
-            Expanded(
-              child:Text(
-                "${selectedCity['name']} Air Quality",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+          // City name + Air Quality with Expanded to take full available width
+          Expanded(
+            child: Text(
+              "${selectedCity['name']} Air Quality",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ],
-        ),
-         Padding(
-           padding: EdgeInsets.all(10.0),
-           // City Dropdown
-          child: _buildCityDropdown(),
-         )
-        ]
-    );
-
+          ),
+        ],
+      ),
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        // City Dropdown
+        child: _buildCityDropdown(),
+      )
+    ]);
   }
 
   Widget _buildCityDropdown() {

@@ -8,25 +8,21 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool isDarkMode = false;
-  String selectedLanguage = 'English'; // اللغة الافتراضية هي الإنجليزية
+  String selectedLanguage = 'English';
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      backgroundColor: Colors.white,
-      body:Stack(
+      body: Stack(
         children: [
           Positioned.fill(
-            child: Center(
-              child: ListView(
-              padding: const EdgeInsets.fromLTRB(15,150,10,15),
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 140, 20, 20),
               children: [
                 _buildSectionTitle("Preferences"),
                 _buildDarkModeTile(),
-                _buildLanguageTile(), // إضافة اختيار اللغة
-                const SizedBox(height: 24),
+                _buildLanguageTile(),
+                const SizedBox(height: 30),
                 _buildSectionTitle("App Info"),
                 _buildTile(
                   icon: Icons.info_outline,
@@ -35,10 +31,35 @@ class _SettingsPageState extends State<SettingsPage> {
                     showAboutDialog(
                       context: context,
                       applicationName: "EcoSense",
-                      applicationVersion: "1.0.0",
-                      applicationIcon: const Icon(Icons.eco, size: 40),
-                      children: const [
-                        Text("An app to track air quality and environmental data."),
+                      applicationVersion: "v1.0.0",
+                      applicationIcon: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: const Icon(Icons.eco,
+                            size: 40, color: Colors.green),
+                      ),
+                      children: [
+                        const SizedBox(height: 16),
+                        Text(
+                          "EcoSense is an environmental monitoring app designed to help you track real-time air quality and environmental data in your city.",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade800,
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          "Developed with 💚 using Flutter.",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.green.shade700,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
                       ],
                     );
                   },
@@ -49,39 +70,42 @@ class _SettingsPageState extends State<SettingsPage> {
                   onTap: () => Navigator.pop(context),
                 ),
               ],
-            ),),
-          ),
-          Positioned(
-            top: 50, // control position here
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.white,
-             // padding: const EdgeInsets.fromLTRB(16,16,16,0),
-              child:  Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.green, size: 40),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()), // Replace with your screen
-                      );
-                    },
-                  ),
-                  SizedBox(width: 65),
-                  Icon(Icons.settings, color: Colors.grey),
-                  SizedBox(width: 4),
-                  Text(
-                    "Setting",
-                    style: TextStyle(color: Colors.black, fontSize: 30,fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
             ),
           ),
+          _buildAppBar(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return Positioned(
+      top: 50,
+      left: 16,
+      right: 16,
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.green, size: 30),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
+            },
+          ),
+          const Spacer(),
+          const Icon(Icons.settings, color: Colors.green),
+          const SizedBox(width: 8),
+          const Text(
+            "Settings",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
+          ),
+          const Spacer(flex: 2),
         ],
       ),
     );
@@ -89,13 +113,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 18,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: Colors.green.shade700, // اللون الأخضر للنصوص
+          color: Colors.green.shade800,
         ),
       ),
     );
@@ -108,17 +132,16 @@ class _SettingsPageState extends State<SettingsPage> {
     VoidCallback? onTap,
   }) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 8,
+      elevation: 4,
       child: ListTile(
-        leading: Icon(icon, color: Colors.green), // اللون الأخضر للأيقونات
+        leading: Icon(icon, color: Colors.green),
         title: Text(
           title,
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.green.shade800, // اللون الأخضر للنصوص
+            fontWeight: FontWeight.w600,
+            color: Colors.green.shade800,
           ),
         ),
         trailing: trailing,
@@ -127,108 +150,51 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // تحسين شكل زر Dark Mode
   Widget _buildDarkModeTile() {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 8,
-      child: ListTile(
-        leading: const Icon(Icons.dark_mode,
-            color: Colors.green), // أيقونة Dark Mode
-        title: Text(
-          "Dark Mode",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.green.shade800, // النص بلون أخضر
-          ),
-        ),
-        trailing: Transform.scale(
-          scale: 1.2, // زيادة حجم الـ Switch قليلاً
-          child: Switch(
-            value: isDarkMode,
-            onChanged: (value) {
-              setState(() {
-                isDarkMode = value;
-                // يمكنك إضافة كود لتغيير الثيم هنا
-              });
-            },
-            activeColor: Colors.green, // اللون الأخضر عند تفعيل الـ Switch
-            activeTrackColor: Colors.green.shade200, // اللون الأخضر الفاتح
-            inactiveThumbColor: Colors.grey, // اللون الرمادي عند إيقاف التفعيل
-            inactiveTrackColor: Colors.grey.shade400, // اللون الرمادي الفاتح
-          ),
-        ),
+    return _buildTile(
+      icon: Icons.dark_mode,
+      title: "Dark Mode",
+      trailing: Switch(
+        value: isDarkMode,
+        onChanged: (value) {
+          setState(() {
+            isDarkMode = value;
+          });
+        },
+        activeColor: Colors.green,
       ),
     );
   }
 
   Widget _buildLanguageTile() {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 8,
-      child: ListTile(
-        leading: const Icon(Icons.language,
-            color: Colors.green), // اللون الأخضر للأيقونة
-        title: Text(
-          "Language",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.green.shade800, // اللون الأخضر للنصوص
-          ),
+    return _buildTile(
+      icon: Icons.language,
+      title: "Language",
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.green.shade50,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.green.shade300),
         ),
-        trailing: Container(
-          width: 130, // تم تقليص العرض
-          padding: const EdgeInsets.symmetric(horizontal: 6), // تقليص الحواف
-          decoration: BoxDecoration(
-            color: Colors.green.shade50, // خلفية القائمة المنسدلة
-            borderRadius: BorderRadius.circular(8),
-            border:
-                Border.all(color: Colors.green.shade300), // حدود بلون أخضر فاتح
-            boxShadow: [
-              BoxShadow(
-                color: Colors.green.shade100,
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: DropdownButton<String>(
-            value: selectedLanguage,
-            iconEnabledColor: Colors.green, // اللون الأخضر لأيقونة السهم
-            iconSize: 20, // حجم السهم المنسدلي أصغر
-            isExpanded: true, // ملء العرض بالكامل
-            dropdownColor: Colors.green.shade50, // خلفية القائمة المنسدلة
-            style: TextStyle(
-              fontSize: 14, // تقليص حجم النص
-              color: Colors.green.shade800, // النص داخل القائمة
-            ),
-            underline: Container(), // إزالة الخط السفلي
-            items: <String>['English', 'Arabic']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(value),
-                ),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedLanguage = newValue!;
-                // هنا يمكنك إضافة كود لتغيير اللغة
-              });
-            },
-          ),
+        child: DropdownButton<String>(
+          value: selectedLanguage,
+          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.green),
+          underline: const SizedBox(),
+          items: ['English', 'Arabic'].map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child:
+                  Text(value, style: TextStyle(color: Colors.green.shade800)),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedLanguage = newValue!;
+            });
+          },
         ),
       ),
     );
   }
 }
-
-
-////////////

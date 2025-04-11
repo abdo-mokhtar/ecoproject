@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ecosensetest/home_screen.dart';
 
 class ProfileWidget extends StatefulWidget {
   @override
@@ -34,36 +33,31 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 10, left: 16, right: 16, bottom: 12),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back,
-                        color: Color(0xFF4CAF50), size: 30),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()),
-                      );
-                    },
-                  ),
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
+            const Padding(
+              padding:
+                  EdgeInsets.only(top: 19, left: 16, right: 16, bottom: 12),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, // توسيط الصف بأكمله
+                  children: [
+                    const Icon(
+                      Icons.edit, // استبدال الأيقونة بـ Icons.edit
+                      color: Colors.green, // اخترت اللون الأخضر للأيقونة
+                      size: 24, // نفس الحجم السابق
+                    ),
+
+                    const SizedBox(width: 8), // زيادة المسافة قليلاً
+                    const Text(
+                      "Edit Profile",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 40),
-                ],
+                  ],
+                ),
               ),
             ),
             Expanded(

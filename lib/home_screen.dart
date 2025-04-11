@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen>
     } else if (_selectedIndex == 1) {
       return ProfileWidget();
     } else if (_selectedIndex == 2) {
-      return NotificationsScreen();
+      return TipsScreen();
     } else {
       return Container();
     }
@@ -298,39 +298,6 @@ class _HomeScreenState extends State<HomeScreen>
               : const WeatherScreen(),
         ),
       ],
-    );
-  }
-
-  Widget _buildSettingsPage() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildSwitchTile("Dark mode", isDarkMode, (value) {
-            setState(() {
-              isDarkMode = value;
-            });
-          }),
-          const Divider(),
-          _buildSwitchTile("Arabic Language", isArabic, (value) {
-            setState(() {
-              isArabic = value;
-            });
-          }),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("Close"),
-          ),
-        ],
-      ),
     );
   }
 

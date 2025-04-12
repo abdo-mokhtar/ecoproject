@@ -116,7 +116,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.cloud_outlined, color: Colors.green, size: 35),
+                      Icon(Icons.cloud_outlined, color: Color(0xFF64B5F6), size: 35),
                       SizedBox(width: 5),
                       Text("Weather",
                           style: TextStyle(
@@ -124,7 +124,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               fontWeight: FontWeight.bold,
                               fontSize: 25)),
                       Spacer(),
-                      Icon(Icons.open_in_new, color: Colors.green),
+                      Icon(Icons.open_in_new, color: Color(0xFF64B5F6)),
                     ],
                   ),
                   Padding(
@@ -132,7 +132,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     child: Row(
                       children: [
                         const Icon(Icons.location_on_outlined,
-                            color: Color(0xFF4CAF50), // أخضر أساسي
+                            color: Color(0xFF64B5F6), // أخضر أساسي
                             size: 22), // زيادة حجم الأيقونة قليلاً
                         const SizedBox(width: 8), // زيادة المسافة
                         DropdownButtonHideUnderline(
@@ -197,16 +197,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               }
                             },
                             buttonStyleData: ButtonStyleData(
-                              height: 46,
-                              width: 200,
+                              height: 40,
+                              width: 150,
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 16),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color:
-                                      Colors.green.shade300, // أخضر فاتح للحدود
-                                  width: 1.5,
+                                      Color(0xFF64B5F6), // أخضر فاتح للحدود
+                                  width: 1,
                                 ),
                                 color: Colors.white,
                                 boxShadow: [
@@ -248,7 +248,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             iconStyleData: IconStyleData(
                               icon: Icon(
                                 Icons.arrow_drop_down,
-                                color: Colors.green.shade800, // أخضر داكن
+                                color: Color(0xFF64B5F6), // أخضر داكن
                                 size: 28,
                               ),
                               openMenuIcon: Icon(

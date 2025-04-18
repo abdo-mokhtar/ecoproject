@@ -47,6 +47,8 @@ dependencies:
   settings_ui: ^2.0.2
   dropdown_button2: ^2.3.9
   lucide_icons: ^0.257.0
+  marquee: ^2.3.0
+  shared_preferences: ^2.5.3
 
 flutter_icons:
   android: true

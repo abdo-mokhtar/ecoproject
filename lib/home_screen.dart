@@ -1,4 +1,10 @@
+import 'dart:math';
+
 import 'package:ecosensetest/air_quality_widget.dart';
+import 'package:ecosensetest/government_tips_screen.dart'
+    show GovernmentTipsScreen;
+import 'package:ecosensetest/regular_user_tips_screen.dart'
+    show RegularUserTipsScreen;
 import 'package:ecosensetest/tips_screen%20.dart';
 import 'package:ecosensetest/popup_menu.dart';
 import 'package:ecosensetest/settings_page.dart' show SettingsPage;
@@ -35,14 +41,80 @@ class _HomeScreenState extends State<HomeScreen>
   bool isAirQualitySelected = true;
 
   int _selectedIndex = 0;
-
   bool isDarkMode = false;
   bool isArabic = false;
+
+  final List<String> _allTips = List.generate(
+      300,
+      (index) =>
+          "Tip ${index + 1}: Help improve air quality and weather awareness.");
+  List<String> _shuffledTips = [];
+  int _tipIndex = 0;
+
+  String? get _currentTip =>
+      _shuffledTips.isNotEmpty ? _shuffledTips[_tipIndex] : null;
+
+  OverlayEntry? _overlayEntry;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _shuffledTips = List.from(_allTips)..shuffle(Random());
+
+    // Show initial tip
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_currentTip != null) {
+        _showFloatingTip(_currentTip!);
+      }
+    });
+  }
+
+  void _showFloatingTip(String message) {
+    if (_overlayEntry != null) return; // Only show if not already showing
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 80,
+        left: 20,
+        right: 20,
+        child: Material(
+          color: Colors.transparent,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.green.shade600.withOpacity(0.95),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                const BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                )
+              ],
+            ),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+
+    // Remove after 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    });
   }
 
   @override
@@ -93,8 +165,7 @@ class _HomeScreenState extends State<HomeScreen>
                     const SizedBox(height: 5),
                     Container(
                       width: double.infinity,
-                      height: MediaQuery.of(context).size.height *
-                          0.10, // تقليل الحجم
+                      height: MediaQuery.of(context).size.height * 0.10,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -106,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                       ),
                     ),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),
@@ -123,7 +195,13 @@ class _HomeScreenState extends State<HomeScreen>
           } else {
             setState(() {
               _selectedIndex = index;
+              if (_shuffledTips.isNotEmpty) {
+                _tipIndex = (_tipIndex + 1) % _shuffledTips.length;
+              }
             });
+            if (_currentTip != null) {
+              _showFloatingTip(_currentTip!);
+            }
           }
         },
         destinations: const [
@@ -171,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen>
     } else if (_selectedIndex == 1) {
       return ProfileWidget();
     } else if (_selectedIndex == 2) {
-      return TipsScreen();
+      return const GovernmentTipsScreen();
     } else {
       return Container();
     }
@@ -185,7 +263,6 @@ class _HomeScreenState extends State<HomeScreen>
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              /// Air Quality button
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -207,19 +284,18 @@ class _HomeScreenState extends State<HomeScreen>
                       child: Text(
                         "Air Quality",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: !isAirQualitySelected
-                                ? FontWeight.normal
-                                : FontWeight.bold),
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: !isAirQualitySelected
+                              ? FontWeight.normal
+                              : FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
-
-              /// Weather button
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -241,11 +317,12 @@ class _HomeScreenState extends State<HomeScreen>
                     child: Text(
                       "Weather",
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: !isAirQualitySelected
-                              ? FontWeight.bold
-                              : FontWeight.normal),
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: !isAirQualitySelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
                     ),
                   ),
                 ),
@@ -258,7 +335,6 @@ class _HomeScreenState extends State<HomeScreen>
           child: isAirQualitySelected
               ? Column(
                   children: [
-                    /// Tab bar with two tabs: API Data and Hardware Data
                     TabBar(
                       controller: _tabController,
                       indicatorColor: Colors.green,
@@ -273,23 +349,20 @@ class _HomeScreenState extends State<HomeScreen>
                               Text("Hardware Data"),
                               SizedBox(width: 5),
                               Image(
-                                  image:
-                                      AssetImage('assets/images/premium.png'),
-                                  height: 20),
+                                image: AssetImage('assets/images/premium.png'),
+                                height: 20,
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
-
-                    /// Tab bar view with two children: AirQualityWidget and a text
                     Expanded(
                       child: TabBarView(
                         controller: _tabController,
                         children: [
                           const AirQualityWidget(),
-                          const Center(
-                              child: const Text("Hardware Data\n(Sensors)")),
+                          const Center(child: Text("Hardware Data\n(Sensors)")),
                         ],
                       ),
                     ),

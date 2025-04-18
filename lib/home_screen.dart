@@ -94,8 +94,7 @@ class _HomeScreenState extends State<HomeScreen>
                     const SizedBox(height: 5),
                     Container(
                       width: double.infinity,
-                      height: MediaQuery.of(context).size.height *
-                          0.10, // تقليل الحجم
+                      height: MediaQuery.of(context).size.height * 0.08,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                       ),

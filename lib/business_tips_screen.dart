@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'aqi_level_card.dart';
+import 'eco_delivery_dialog.dart'; // تأكد من استيراد الديالوج
 
 class BusinessTipsScreen extends StatelessWidget {
   const BusinessTipsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // عرض الديالوج عند أول تحميل للشاشة
+    Future.microtask(() {
+      EcoDeliveryDialog.show(context);
+    });
+
     return Scaffold(
       appBar: AppBar(title: const Text("Tips for Businesses")),
       body: ListView(

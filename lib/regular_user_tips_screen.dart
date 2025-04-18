@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'aqi_level_card.dart';
+import 'eco_delivery_dialog.dart'; // استدعاء الكلاس
 
 class RegularUserTipsScreen extends StatelessWidget {
   const RegularUserTipsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // ✅ استدعاء الدايالوج أول ما تبني الشاشة
+    Future.microtask(() {
+      EcoDeliveryDialog.show(context);
+    });
+
     final aqiLevels = [
       {
         'level': "Good (0–50)",
@@ -53,7 +59,6 @@ class RegularUserTipsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.teal.shade600,
         centerTitle: true,
         elevation: 4,
         title: const Text(

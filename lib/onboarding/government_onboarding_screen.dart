@@ -1,4 +1,5 @@
-import 'package:ecosensetest/style_onborading.dart';
+import 'package:ecosensetest/onboarding/style_onborading.dart'
+    show StyleOnBoarding;
 import 'package:flutter/material.dart';
 
 class GovernmentOnboardingScreen extends StatelessWidget {

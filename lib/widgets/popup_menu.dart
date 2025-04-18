@@ -1,5 +1,5 @@
-import 'package:ecosensetest/about_page.dart';
-import 'package:ecosensetest/meet_our_team.dart';
+import 'package:ecosensetest/screens/about_page.dart' show AboutPage;
+import 'package:ecosensetest/screens/meet_our_team.dart' show MeetOurTeamPage;
 import 'package:flutter/material.dart';
 
 class PopupMenuButtonMenu extends StatelessWidget {

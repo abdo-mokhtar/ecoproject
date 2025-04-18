@@ -1,13 +1,17 @@
-import 'package:ecosensetest/home_screen.dart';
+import 'package:ecosensetest/onboarding/business_onboarding_screen.dart'
+    show BusinessOnboardingScreen;
+import 'package:ecosensetest/onboarding/government_onboarding_screen.dart'
+    show GovernmentOnboardingScreen;
+import 'package:ecosensetest/onboarding/user_onboarding_screen.dart'
+    show UserOnboardingScreen;
+import 'package:ecosensetest/screens/choose_plan_screen.dart'
+    show ChoosePlanScreen;
+import 'package:ecosensetest/screens/home_screen.dart' show HomeScreen;
+import 'package:ecosensetest/screens/login_screen.dart';
+import 'package:ecosensetest/screens/signup_screen.dart' show SignUpScreen;
+import 'package:ecosensetest/screens/splash_screen.dart' show SplashScreen;
+import 'package:ecosensetest/screens/start_page.dart' show StartPage;
 import 'package:flutter/material.dart';
-import 'splash_screen.dart';
-import 'start_page.dart';
-import 'choose_plan_screen.dart';
-import 'user_onboarding_screen.dart';
-import 'business_onboarding_screen.dart';
-import 'government_onboarding_screen.dart';
-import 'signup.dart';
-import 'login.dart';
 
 void main() {
   runApp(EcoSenseApp());

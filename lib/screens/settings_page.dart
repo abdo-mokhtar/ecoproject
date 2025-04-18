@@ -1,5 +1,5 @@
+import 'package:ecosensetest/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:ecosensetest/home_screen.dart';
 
 class SettingsPage extends StatefulWidget {
   @override

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:ecosensetest/weather_model.dart';
+import 'package:ecosensetest/models/weather_model.dart' show ApiResponse;
 import 'package:http/http.dart' as http;
 
 class WeatherApi {

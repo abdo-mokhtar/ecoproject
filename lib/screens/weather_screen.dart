@@ -6,10 +6,11 @@ import 'package:dropdown_button2/dropdown_button2.dart'
         DropdownStyleData,
         IconStyleData,
         MenuItemStyleData;
+import 'package:ecosensetest/models/weather_model.dart';
+import 'package:ecosensetest/screens/weather_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ecosensetest/weather_api.dart';
-import 'package:ecosensetest/weather_model.dart';
+
 import 'package:intl/intl.dart';
 
 class WeatherScreen extends StatefulWidget {

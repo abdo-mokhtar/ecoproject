@@ -1,6 +1,6 @@
+import 'package:ecosensetest/widgets/aqi_level_card.dart' show AQILevelCard;
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'aqi_level_card.dart';
 import 'eco_delivery_dialog.dart'; // تأكد من استيراد الديالوج
 
 class BusinessTipsScreen extends StatelessWidget {

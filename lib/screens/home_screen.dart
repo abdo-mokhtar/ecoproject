@@ -1,11 +1,12 @@
-import 'package:ecosensetest/air_quality_widget.dart';
-
-import 'package:ecosensetest/popup_menu.dart';
-import 'package:ecosensetest/regular_user_tips_screen.dart';
-import 'package:ecosensetest/settings_page.dart' show SettingsPage;
+import 'package:ecosensetest/screens/regular_user_tips_screen.dart'
+    show RegularUserTipsScreen;
+import 'package:ecosensetest/screens/settings_page.dart' show SettingsPage;
+import 'package:ecosensetest/screens/weather_screen.dart' show WeatherScreen;
+import 'package:ecosensetest/widgets/air_quality_widget.dart'
+    show AirQualityWidget;
+import 'package:ecosensetest/widgets/popup_menu.dart' show PopupMenuButtonMenu;
+import 'package:ecosensetest/widgets/profile_widget.dart' show ProfileWidget;
 import 'package:flutter/material.dart';
-import 'package:ecosensetest/profile_widget.dart';
-import 'package:ecosensetest/weather_screen.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,4 +1,4 @@
-import 'package:ecosensetest/style_onborading.dart';
+import 'package:ecosensetest/onboarding/style_onborading.dart';
 import 'package:flutter/material.dart';
 
 class BusinessOnboardingScreen extends StatelessWidget {

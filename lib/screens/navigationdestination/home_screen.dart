@@ -1,11 +1,15 @@
-import 'package:ecosensetest/screens/regular_user_tips_screen.dart'
+import 'package:ecosensetest/screens/tips/business_tips_screen.dart';
+import 'package:ecosensetest/screens/tips/government_tips_screen.dart';
+import 'package:ecosensetest/screens/tips/regular_user_tips_screen.dart'
     show RegularUserTipsScreen;
-import 'package:ecosensetest/screens/settings_page.dart' show SettingsPage;
+import 'package:ecosensetest/screens/navigationdestination/settings_page.dart'
+    show SettingsPage;
 import 'package:ecosensetest/screens/weather_screen.dart' show WeatherScreen;
 import 'package:ecosensetest/widgets/air_quality_widget.dart'
     show AirQualityWidget;
 import 'package:ecosensetest/widgets/popup_menu.dart' show PopupMenuButtonMenu;
-import 'package:ecosensetest/widgets/profile_widget.dart' show ProfileWidget;
+import 'package:ecosensetest/screens/navigationdestination/profile_widget.dart'
+    show ProfileWidget;
 import 'package:flutter/material.dart';
 
 void main() {
@@ -172,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen>
     } else if (_selectedIndex == 1) {
       return ProfileWidget();
     } else if (_selectedIndex == 2) {
-      return const RegularUserTipsScreen();
+      return const GovernmentTipsScreen();
     } else {
       return Container();
     }

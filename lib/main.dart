@@ -6,7 +6,8 @@ import 'package:ecosensetest/onboarding/user_onboarding_screen.dart'
     show UserOnboardingScreen;
 import 'package:ecosensetest/screens/choose_plan_screen.dart'
     show ChoosePlanScreen;
-import 'package:ecosensetest/screens/home_screen.dart' show HomeScreen;
+import 'package:ecosensetest/screens/navigationdestination/home_screen.dart'
+    show HomeScreen;
 import 'package:ecosensetest/screens/login_screen.dart';
 import 'package:ecosensetest/screens/signup_screen.dart' show SignUpScreen;
 import 'package:ecosensetest/screens/splash_screen.dart' show SplashScreen;

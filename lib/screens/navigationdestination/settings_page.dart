@@ -1,4 +1,4 @@
-import 'package:ecosensetest/screens/home_screen.dart';
+import 'package:ecosensetest/screens/navigationdestination/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {

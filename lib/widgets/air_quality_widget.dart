@@ -3,7 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:ecosensetest/services/api_service.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:ecosensetest/Air_pollutants_info.dart';
+
+import '../screens/air_pollutants_info.dart';
 
 class AirQualityWidget extends StatefulWidget {
   const AirQualityWidget({super.key});
@@ -277,11 +278,10 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>AirPollutantsInfo()),
+                MaterialPageRoute(builder: (context) => AirPollutantsInfo()),
               );
             },
           )
-
         ],
       ),
       Padding(

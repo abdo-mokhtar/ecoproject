@@ -36,7 +36,34 @@ class UserOnboardingScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: StyleOnBoarding(controller: controller, pageContent: pageContent),
+      body: Column(
+        children: [
+          Expanded(
+            child: StyleOnBoarding(
+                controller: controller, pageContent: pageContent),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: ElevatedButton(
+              onPressed: () {
+                // عند الضغط على الزرار، يذهب إلى HomeScreen مع إرسال نوع الخطة 'User'
+                Navigator.pushReplacementNamed(
+                  context,
+                  '/home', // تأكد من أنك تعرفت على هذا الـ route في main.dart
+                  arguments: 'User', // إرسال نوع الخطة كـ argument
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: const Color(0xFF48A47C),
+              ),
+              child: const Text('Start',
+                  style: TextStyle(fontSize: 16, color: Colors.white)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

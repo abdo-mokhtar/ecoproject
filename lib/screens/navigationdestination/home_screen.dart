@@ -39,11 +39,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isAirQualitySelected = true;
-
   int _selectedIndex = 0;
-
-  bool isDarkMode = false;
-  bool isArabic = false;
 
   @override
   void initState() {
@@ -143,14 +139,14 @@ class _HomeScreenState extends State<HomeScreen>
             label: 'Profile',
           ),
           NavigationDestination(
-            icon: Icon(Icons.tips_and_updates),
+            icon: Icon(Icons.tips_and_updates_outlined),
             selectedIcon: Icon(Icons.tips_and_updates, color: Colors.green),
             label: 'Tips',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),
             selectedIcon: Icon(Icons.settings, color: Colors.green),
-            label: 'Setting',
+            label: 'Settings',
           ),
         ],
       ),
@@ -171,14 +167,15 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildBody() {
-    if (_selectedIndex == 0) {
-      return _homeContent();
-    } else if (_selectedIndex == 1) {
-      return ProfileWidget();
-    } else if (_selectedIndex == 2) {
-      return const GovernmentTipsScreen();
-    } else {
-      return Container();
+    switch (_selectedIndex) {
+      case 0:
+        return _homeContent();
+      case 1:
+        return ProfileWidget();
+      case 2:
+        return const GovernmentTipsScreen();
+      default:
+        return Container();
     }
   }
 
@@ -190,7 +187,6 @@ class _HomeScreenState extends State<HomeScreen>
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              /// Air Quality button
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -199,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen>
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.green.shade300, Colors.blue.shade300],
@@ -212,19 +208,18 @@ class _HomeScreenState extends State<HomeScreen>
                       child: Text(
                         "Air Quality",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: !isAirQualitySelected
-                                ? FontWeight.normal
-                                : FontWeight.bold),
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: isAirQualitySelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
-
-              /// Weather button
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -233,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen>
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.blue.shade700, Colors.blue.shade300],
@@ -242,15 +237,17 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Weather",
-                      style: TextStyle(
+                    child: Center(
+                      child: Text(
+                        "Weather",
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: !isAirQualitySelected
                               ? FontWeight.bold
-                              : FontWeight.normal),
+                              : FontWeight.normal,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -263,7 +260,6 @@ class _HomeScreenState extends State<HomeScreen>
           child: isAirQualitySelected
               ? Column(
                   children: [
-                    /// Tab bar with two tabs: API Data and Hardware Data
                     TabBar(
                       controller: _tabController,
                       indicatorColor: Colors.green,
@@ -278,23 +274,20 @@ class _HomeScreenState extends State<HomeScreen>
                               Text("Hardware Data"),
                               SizedBox(width: 5),
                               Image(
-                                  image:
-                                      AssetImage('assets/images/premium.png'),
-                                  height: 20),
+                                image: AssetImage('assets/images/premium.png'),
+                                height: 20,
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
-
-                    /// Tab bar view with two children: AirQualityWidget and a text
                     Expanded(
                       child: TabBarView(
                         controller: _tabController,
-                        children: [
-                          const AirQualityWidget(),
-                          const Center(
-                              child: const Text("Hardware Data\n(Sensors)")),
+                        children: const [
+                          AirQualityWidget(),
+                          Center(child: Text("Hardware Data\n(Sensors)")),
                         ],
                       ),
                     ),

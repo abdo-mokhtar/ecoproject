@@ -1,7 +1,7 @@
-import 'package:ecosensetest/widgets/aqi_level_card.dart' show AQILevelCard;
+// import 'package:ecosensetest/widgets/aqi_level_card.dart' show AQILevelCard;
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../eco_delivery_dialog.dart'; // تأكد من استيراد الديالوج
+import '../eco_delivery_dialog.dart';
 
 class BusinessTipsScreen extends StatelessWidget {
   const BusinessTipsScreen({super.key});
@@ -130,6 +130,7 @@ class BusinessTipsScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
+                            // ignore: deprecated_member_use
                             color: (item['color'] as Color).withOpacity(0.15),
                           ),
                           child: Icon(

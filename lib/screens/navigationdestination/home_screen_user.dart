@@ -135,7 +135,17 @@ class _HomeScreenUserState extends State<HomeScreenUser>
       ],
       onTap: (index) {
         if (index == 3) {
-          _showSettingsBottomSheet;
+          int currentIndex = _selectedIndex; // ← خزنه
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SettingsPage(),
+              fullscreenDialog: true,
+            ),
+          ).then((_) {
+            // بعد ما نرجع من Settings، نرجع لنفس الصفحة
+            setState(() => _selectedIndex = currentIndex);
+          });
         } else {
           setState(() => _selectedIndex = index);
         }

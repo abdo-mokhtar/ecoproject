@@ -1,3 +1,5 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:ecosensetest/screens/tips/business_tips_screen.dart';
 import 'package:ecosensetest/screens/navigationdestination/settings_page.dart'
     show SettingsPage;
 import 'package:ecosensetest/screens/weather_screen.dart' show WeatherScreen;
@@ -7,9 +9,6 @@ import 'package:ecosensetest/widgets/popup_menu.dart' show PopupMenuButtonMenu;
 import 'package:ecosensetest/screens/navigationdestination/profile_widget.dart'
     show ProfileWidget;
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-
-import '../tips/business_tips_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,19 +21,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreenBusiness(),
+      home: HomeScreenGoverment(),
     );
   }
 }
 
-class HomeScreenBusiness extends StatefulWidget {
-  const HomeScreenBusiness({super.key});
+class HomeScreenGoverment extends StatefulWidget {
+  const HomeScreenGoverment({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreenBusiness>
+class _HomeScreenState extends State<HomeScreenGoverment>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isAirQualitySelected = true;
@@ -171,79 +170,8 @@ class _HomeScreenState extends State<HomeScreenBusiness>
   Widget _homeContent() {
     return Column(
       children: [
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isAirQualitySelected = true;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.green.shade300, Colors.blue.shade300],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Air Quality",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: isAirQualitySelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isAirQualitySelected = false;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.blue.shade700, Colors.blue.shade300],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Weather",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: !isAirQualitySelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        const SizedBox(height: 16),
+        _buildToggleButtons(),
         const SizedBox(height: 10),
         Expanded(
           child: isAirQualitySelected
@@ -285,6 +213,67 @@ class _HomeScreenState extends State<HomeScreenBusiness>
               : const WeatherScreen(),
         ),
       ],
+    );
+  }
+
+  Widget _buildToggleButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          _buildToggleButton(
+            "Air Quality",
+            isAirQualitySelected,
+            () => setState(() => isAirQualitySelected = true),
+            selectedColors: [Colors.green.shade300, Colors.blue.shade300],
+          ),
+          const SizedBox(width: 10),
+          _buildToggleButton(
+            "Weather",
+            !isAirQualitySelected,
+            () => setState(() => isAirQualitySelected = false),
+            selectedColors: [Colors.blue.shade700, Colors.blue.shade300],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToggleButton(
+    String label,
+    bool selected,
+    VoidCallback onTap, {
+    required List<Color> selectedColors,
+    List<Color> unselectedColors = const [
+      const Color(0xFFBDBDBD), // بدل Colors.grey.shade400
+      const Color(0xFFE0E0E0), // بدل Colors.grey.shade300
+    ],
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: selected ? selectedColors : unselectedColors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

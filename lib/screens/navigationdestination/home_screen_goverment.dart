@@ -170,79 +170,8 @@ class _HomeScreenState extends State<HomeScreenGoverment>
   Widget _homeContent() {
     return Column(
       children: [
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isAirQualitySelected = true;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.green.shade300, Colors.blue.shade300],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Air Quality",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: isAirQualitySelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isAirQualitySelected = false;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.blue.shade700, Colors.blue.shade300],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Weather",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: !isAirQualitySelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        const SizedBox(height: 16),
+        _buildToggleButtons(),
         const SizedBox(height: 10),
         Expanded(
           child: isAirQualitySelected
@@ -284,6 +213,67 @@ class _HomeScreenState extends State<HomeScreenGoverment>
               : const WeatherScreen(),
         ),
       ],
+    );
+  }
+
+  Widget _buildToggleButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          _buildToggleButton(
+            "Air Quality",
+            isAirQualitySelected,
+            () => setState(() => isAirQualitySelected = true),
+            selectedColors: [Colors.green.shade300, Colors.blue.shade300],
+          ),
+          const SizedBox(width: 10),
+          _buildToggleButton(
+            "Weather",
+            !isAirQualitySelected,
+            () => setState(() => isAirQualitySelected = false),
+            selectedColors: [Colors.blue.shade700, Colors.blue.shade300],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToggleButton(
+    String label,
+    bool selected,
+    VoidCallback onTap, {
+    required List<Color> selectedColors,
+    List<Color> unselectedColors = const [
+      const Color(0xFFBDBDBD), // بدل Colors.grey.shade400
+      const Color(0xFFE0E0E0), // بدل Colors.grey.shade300
+    ],
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: selected ? selectedColors : unselectedColors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

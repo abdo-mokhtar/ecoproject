@@ -21,19 +21,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreenGoverment(),
+      home: HomeScreenBusiness(),
     );
   }
 }
 
-class HomeScreenGoverment extends StatefulWidget {
-  const HomeScreenGoverment({super.key});
+class HomeScreenBusiness extends StatefulWidget {
+  const HomeScreenBusiness({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreenGoverment>
+class _HomeScreenState extends State<HomeScreenBusiness>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isAirQualitySelected = true;

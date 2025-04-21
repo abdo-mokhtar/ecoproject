@@ -153,19 +153,6 @@ class _HomeScreenUserState extends State<HomeScreenUser>
     );
   }
 
-  void _showSettingsBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SettingsPage();
-      },
-    );
-  }
-
   Widget _homeContent() {
     return Column(
       children: [

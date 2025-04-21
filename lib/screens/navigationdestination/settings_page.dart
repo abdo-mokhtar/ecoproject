@@ -1,5 +1,7 @@
-import 'package:ecosensetest/screens/navigationdestination/home_screen.dart';
+import 'package:ecosensetest/screens/navigationdestination/home_screen_business.dart';
 import 'package:flutter/material.dart';
+
+import 'home_screen_goverment.dart' show HomeScreenGoverment;
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -101,7 +103,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreenGoverment()),
                   );
                 },
                 child: Container(

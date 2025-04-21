@@ -2,9 +2,7 @@ import 'package:ecosensetest/onboarding/style_onborading.dart';
 import 'package:flutter/material.dart';
 
 class BusinessOnboardingScreen extends StatelessWidget {
-  final controller = PageController(viewportFraction: 1, keepPage: true);
-
-  BusinessOnboardingScreen({super.key});
+  const BusinessOnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +10,7 @@ class BusinessOnboardingScreen extends StatelessWidget {
       {
         'title': 'Sustainable Practice Resource',
         'description':
-            ' Provide guidelines to encourage responsible consumption, and green business operations.',
+            'Provide guidelines to encourage responsible consumption, and green business operations.',
         'json': 'assets/json/Sustainable Practice Resource animation.json',
       },
       {
@@ -24,11 +22,11 @@ class BusinessOnboardingScreen extends StatelessWidget {
       {
         'title': 'Environmental Impact Insights',
         'description':
-            ' help organizations, policymakers, and individuals assess factors like carbon emissions, resource consumption, waste generation, and ecosystem disruption.',
+            'Help organizations, policymakers, and individuals assess factors like carbon emissions, resource consumption, waste generation, and ecosystem disruption.',
         'json': 'assets/json/Environmental Impact Insights Animation.json',
       },
       {
-        'title': ' Emission Reduction Recommendations',
+        'title': 'Emission Reduction Recommendations',
         'description':
             'Strategies aimed at minimizing the release of greenhouse gases (GHGs) and other pollutants into the atmosphere.',
         'json': 'assets/json/Emission Reduction Recommendations Animation.json',
@@ -37,7 +35,10 @@ class BusinessOnboardingScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: StyleOnBoarding(controller: controller, pageContent: pageContent),
+      body: StyleOnBoarding(
+        controller: PageController(viewportFraction: 1, keepPage: true),
+        pageContent: pageContent,
+      ),
     );
   }
 }

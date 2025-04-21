@@ -6,13 +6,19 @@ import 'package:ecosensetest/onboarding/user_onboarding_screen.dart'
     show UserOnboardingScreen;
 import 'package:ecosensetest/screens/choose_plan_screen.dart'
     show ChoosePlanScreen;
-import 'package:ecosensetest/screens/navigationdestination/home_screen.dart'
-    show HomeScreen;
+
 import 'package:ecosensetest/screens/login_screen.dart';
 import 'package:ecosensetest/screens/signup_screen.dart' show SignUpScreen;
 import 'package:ecosensetest/screens/splash_screen.dart' show SplashScreen;
 import 'package:ecosensetest/screens/start_page.dart' show StartPage;
 import 'package:flutter/material.dart';
+
+import 'screens/navigationdestination/home_screen_business.dart'
+    show HomeScreenBusiness;
+import 'screens/navigationdestination/home_screen_goverment.dart'
+    show HomeScreenGoverment;
+import 'screens/navigationdestination/home_screen_user.dart'
+    show HomeScreenUser;
 
 void main() {
   runApp(EcoSenseApp());
@@ -31,9 +37,11 @@ class EcoSenseApp extends StatelessWidget {
         '/user-onboarding': (context) => UserOnboardingScreen(),
         '/business-onboarding': (context) => BusinessOnboardingScreen(),
         '/government-onboarding': (context) => GovernmentOnboardingScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/homegoverment': (context) => const HomeScreenGoverment(),
         '/signup': (context) => SignUpScreen(),
         '/login': (context) => LoginScreen(),
+        '/homeuser': (context) => const HomeScreenUser(),
+        '/homebusiness': (context) => const HomeScreenBusiness(),
       },
     );
   }

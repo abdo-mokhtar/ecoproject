@@ -1,4 +1,7 @@
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, deprecated_member_use
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -7,6 +10,26 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
+
+  // دالة لتحديد التنقل بناءً على نوع المستخدم
+  Future<void> _navigateBasedOnUserType(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userType = prefs.getString('userType') ?? 'user'; // الافتراضي user
+
+    switch (userType) {
+      case 'user':
+        Navigator.pushReplacementNamed(context, '/homeuser');
+        break;
+      case 'business':
+        Navigator.pushReplacementNamed(context, '/homebusiness');
+        break;
+      case 'government':
+        Navigator.pushReplacementNamed(context, '/homegoverment');
+        break;
+      default:
+        Navigator.pushReplacementNamed(context, '/homeuser'); // افتراضي
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,14 +144,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          // زر Skip في أسفل الشاشة على اليسار
+          // زر Skip في أسفل الشاشة على اليمين
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Align(
-              alignment: Alignment.bottomRight, // محاذاة على اليسار
+              alignment: Alignment.bottomRight,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacementNamed(context, '/home');
+                  _navigateBasedOnUserType(context); // تنقل بناءً على userType
                 },
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,

@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChoosePlanScreen extends StatelessWidget {
   const ChoosePlanScreen({super.key});
+
+  // دالة لتخزين نوع المستخدم والتنقل
+  Future<void> _saveUserTypeAndNavigate(
+      BuildContext context, String userType, String route) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userType', userType.toLowerCase());
+    Navigator.pushNamed(context, route);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,14 +108,16 @@ class ChoosePlanScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: features
-                  .map((feature) =>
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3.0),
-                    child: Text(
-                      feature,
-                      style: const TextStyle(fontSize: 15,fontFamily: 'JejuGothic', color: Color(0xFF535353)),
-                    ),
-                  ))
+                  .map((feature) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 3.0),
+                        child: Text(
+                          feature,
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'JejuGothic',
+                              color: Color(0xFF535353)),
+                        ),
+                      ))
                   .toList(),
             ),
             const SizedBox(height: 10),
@@ -114,24 +126,30 @@ class ChoosePlanScreen extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {
-                  // Handle button click
-                  if(title=='User'){
-                        Navigator.pushNamed(context, '/user-onboarding');
-                  } else if(title == 'Business'){
-                        Navigator.pushNamed(context, '/business-onboarding');
-                  } else if(title == 'Government'){
-                        Navigator.pushNamed(context, '/government-onboarding');
+                  // تخزين نوع المستخدم والتنقل
+                  if (title == 'User') {
+                    _saveUserTypeAndNavigate(
+                        context, 'user', '/user-onboarding');
+                  } else if (title == 'Business') {
+                    _saveUserTypeAndNavigate(
+                        context, 'business', '/business-onboarding');
+                  } else if (title == 'Government') {
+                    _saveUserTypeAndNavigate(
+                        context, 'government', '/government-onboarding');
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    backgroundColor: const Color(0xFF48A47C)
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  backgroundColor: const Color(0xFF48A47C),
                 ),
-                child: const Text('Start', style: TextStyle(fontSize: 14, color: Colors.white),),
+                child: const Text(
+                  'Start',
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
               ),
             ),
           ],

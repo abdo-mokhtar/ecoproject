@@ -32,7 +32,8 @@ class StyleOnBoarding extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +54,7 @@ class StyleOnBoarding extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF48A47C),
+                            color: Color(0xFF48A47C),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -87,24 +88,26 @@ class StyleOnBoarding extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(bottom: screenHeight * 0.05),
+            padding: EdgeInsets.only(bottom: screenHeight * 0.02),
             child: OutlinedButton(
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/login');
               },
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                side: const BorderSide(color: const Color(0xFF48A47C), width: 2),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                side: const BorderSide(color: Color(0xFF48A47C), width: 2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
               child: const Text(
                 'Get Started',
-                style: const TextStyle(
-                    fontSize: 16,
-                    color: const Color(0xFF48A47C),
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFF48A47C),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

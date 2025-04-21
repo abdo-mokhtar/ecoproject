@@ -7,6 +7,7 @@ import 'package:ecosensetest/widgets/popup_menu.dart' show PopupMenuButtonMenu;
 import 'package:ecosensetest/screens/navigationdestination/profile_widget.dart'
     show ProfileWidget;
 import 'package:flutter/material.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart'; // Add this import
 
 import '../tips/regular_user_tips_screen.dart';
 
@@ -112,11 +113,20 @@ class _HomeScreenState extends State<HomeScreenUser>
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: Colors.white,
-        height: 55,
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) {
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        color: Colors.green.shade100,
+        buttonBackgroundColor: Colors.green,
+        height: 60,
+        animationDuration: const Duration(milliseconds: 300),
+        index: _selectedIndex,
+        items: const [
+          Icon(Icons.home, size: 30, color: Colors.white),
+          Icon(Icons.person, size: 30, color: Colors.white),
+          Icon(Icons.tips_and_updates, size: 30, color: Colors.white),
+          Icon(Icons.settings, size: 30, color: Colors.white),
+        ],
+        onTap: (index) {
           if (index == 3) {
             _showSettingsBottomSheet(context);
           } else {
@@ -125,28 +135,6 @@ class _HomeScreenState extends State<HomeScreenUser>
             });
           }
         },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: Colors.green),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person, color: Colors.green),
-            label: 'Profile',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.tips_and_updates_outlined),
-            selectedIcon: Icon(Icons.tips_and_updates, color: Colors.green),
-            label: 'Tips',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings, color: Colors.green),
-            label: 'Settings',
-          ),
-        ],
       ),
     );
   }
@@ -263,21 +251,22 @@ class _HomeScreenState extends State<HomeScreenUser>
                       indicatorColor: Colors.green,
                       labelColor: Colors.green,
                       unselectedLabelColor: Colors.grey,
+                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                       tabs: const [
-                        Tab(text: "API Data"),
-                        Tab(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text("Hardware Data"),
-                              SizedBox(width: 5),
-                              Image(
-                                image: AssetImage('assets/images/premium.png'),
-                                height: 20,
-                              ),
-                            ],
-                          ),
-                        ),
+                        Tab(text: "Live Data"),
+                        // Tab(
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       Text("Sensor Data"),
+                        //       SizedBox(width: 6),
+                        //       Image.asset(
+                        //         'assets/images/premium.png',
+                        //         height: 18,
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                     Expanded(

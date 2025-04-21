@@ -1,7 +1,5 @@
-// import 'package:ecosensetest/screens/tips/business_tips_screen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:ecosensetest/screens/tips/government_tips_screen.dart';
-// import 'package:ecosensetest/screens/tips/regular_user_tips_screen.dart'
-//     show RegularUserTipsScreen;
 import 'package:ecosensetest/screens/navigationdestination/settings_page.dart'
     show SettingsPage;
 import 'package:ecosensetest/screens/weather_screen.dart' show WeatherScreen;
@@ -40,6 +38,7 @@ class _HomeScreenState extends State<HomeScreenGoverment>
   late TabController _tabController;
   bool isAirQualitySelected = true;
   int _selectedIndex = 0;
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
   void initState() {
@@ -114,11 +113,22 @@ class _HomeScreenState extends State<HomeScreenGoverment>
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: Colors.white,
+      bottomNavigationBar: CurvedNavigationBar(
+        key: _bottomNavigationKey,
+        index: _selectedIndex,
         height: 55,
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) {
+        items: const [
+          Icon(Icons.home_outlined, size: 30),
+          Icon(Icons.person_outline, size: 30),
+          Icon(Icons.tips_and_updates_outlined, size: 30),
+          Icon(Icons.settings_outlined, size: 30),
+        ],
+        color: Colors.white,
+        buttonBackgroundColor: Colors.green,
+        backgroundColor: Colors.transparent,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+        onTap: (index) {
           if (index == 3) {
             _showSettingsBottomSheet(context);
           } else {
@@ -127,28 +137,6 @@ class _HomeScreenState extends State<HomeScreenGoverment>
             });
           }
         },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: Colors.green),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person, color: Colors.green),
-            label: 'Profile',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.tips_and_updates_outlined),
-            selectedIcon: Icon(Icons.tips_and_updates, color: Colors.green),
-            label: 'Tips',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings, color: Colors.green),
-            label: 'Settings',
-          ),
-        ],
       ),
     );
   }
@@ -266,12 +254,12 @@ class _HomeScreenState extends State<HomeScreenGoverment>
                       labelColor: Colors.green,
                       unselectedLabelColor: Colors.grey,
                       tabs: const [
-                        Tab(text: "API Data"),
+                        Tab(text: "Live Data"),
                         Tab(
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text("Hardware Data"),
+                              Text("Sensor Data"),
                               SizedBox(width: 5),
                               Image(
                                 image: AssetImage('assets/images/premium.png'),

@@ -98,7 +98,7 @@ class RegularUserTipsScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 9),
                 itemCount: aqiLevels.length,
                 itemBuilder: (context, index) {
                   final item = aqiLevels[index];

@@ -135,18 +135,41 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   Widget _buildLoadingWidget() {
     return Center(
       child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        child: const Padding(
-          padding: EdgeInsets.all(16.0),
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        color: Colors.white.withOpacity(0.95),
+        shadowColor: Colors.green.shade100,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
+              SizedBox(
+                height: 40,
+                width: 40,
+                child: CircularProgressIndicator(
+                  strokeWidth: 5,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Colors.green.shade400,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Fetching Air Quality...',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 6),
               Text(
-                'Loading Air Quality Data...',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                'Please wait a moment',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade600,
+                ),
               ),
             ],
           ),
@@ -274,7 +297,7 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.info_outline, color: Colors.green, size: 28),
+            icon: const Icon(Icons.info_outline, color: Colors.green, size: 28),
             onPressed: () {
               Navigator.push(
                 context,

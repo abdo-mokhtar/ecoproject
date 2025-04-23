@@ -62,14 +62,14 @@ class RegularUserTipsScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFf1fdf3), // خلفية مريحة للعين
+      backgroundColor: const Color(0xFFf1fdf3),
       body: SafeArea(
         child: Column(
           children: [
             const SizedBox(height: 24),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(
                   LucideIcons.user,
                   size: 22,
@@ -102,64 +102,77 @@ class RegularUserTipsScreen extends StatelessWidget {
                 itemCount: aqiLevels.length,
                 itemBuilder: (context, index) {
                   final item = aqiLevels[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 18),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                  return TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: 1),
+                    duration: Duration(milliseconds: 400 + (index * 100)),
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 30 * (1 - value)),
+                          child: child,
                         ),
-                      ],
-                      border: Border.all(
-                        color: (item['color'] as Color).withOpacity(0.2),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 18),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12.withOpacity(0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: (item['color'] as Color).withOpacity(0.2),
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: (item['color'] as Color).withOpacity(0.15),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (item['color'] as Color).withOpacity(0.15),
+                            ),
+                            child: Icon(
+                              item['icon'] as IconData,
+                              color: item['color'] as Color,
+                              size: 26,
+                            ),
                           ),
-                          child: Icon(
-                            item['icon'] as IconData,
-                            color: item['color'] as Color,
-                            size: 26,
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item['level'] as String,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w600,
-                                  color: item['color'] as Color,
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item['level'] as String,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                    color: item['color'] as Color,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                item['tip'] as String,
-                                style: const TextStyle(
-                                  fontSize: 14.5,
-                                  height: 1.6,
-                                  color: Colors.black87,
+                                const SizedBox(height: 8),
+                                Text(
+                                  item['tip'] as String,
+                                  style: const TextStyle(
+                                    fontSize: 14.5,
+                                    height: 1.6,
+                                    color: Colors.black87,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },

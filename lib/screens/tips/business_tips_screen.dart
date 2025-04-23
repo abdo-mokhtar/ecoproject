@@ -1,4 +1,3 @@
-// import 'package:ecosensetest/widgets/aqi_level_card.dart' show AQILevelCard;
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../eco_delivery_dialog.dart';
@@ -21,6 +20,8 @@ class BusinessTipsScreen extends StatelessWidget {
         'tip': "✅ No restrictions — safe to operate as usual.\n"
             "🌿 Encourage green practices and sustainable habits in the workplace.\n"
             "📢 Highlight eco-friendly business initiatives to employees and clients.",
+        'fact':
+            "Good air quality improves employee focus and lowers absenteeism.",
       },
       {
         'level': "Moderate (51–100)",
@@ -30,6 +31,8 @@ class BusinessTipsScreen extends StatelessWidget {
             "⚠️ Air quality is acceptable, but some pollutants may be present.\n"
                 "🧑‍⚕️ Monitor staff with respiratory issues or allergies.\n"
                 "🪴 Improve indoor air with plants or air purifiers.",
+        'fact':
+            "Moderate AQI can slightly reduce cognitive performance and productivity.",
       },
       {
         'level': "Unhealthy for Sensitive Groups (101–150)",
@@ -38,6 +41,8 @@ class BusinessTipsScreen extends StatelessWidget {
         'tip': "🚷 Limit prolonged outdoor work for vulnerable employees.\n"
             "🛠️ Improve indoor air filtration systems.\n"
             "🧰 Offer protective gear if outdoor tasks are necessary.",
+        'fact':
+            "Sensitive employees may report fatigue and mild breathing issues.",
       },
       {
         'level': "Unhealthy (151–200)",
@@ -46,6 +51,8 @@ class BusinessTipsScreen extends StatelessWidget {
         'tip': "❌ Avoid scheduling outdoor meetings or labor tasks.\n"
             "🕓 Adjust work hours to reduce exposure.\n"
             "📦 Enable flexible or remote work policies where applicable.",
+        'fact':
+            "High AQI levels can reduce indoor air quality even with closed windows.",
       },
       {
         'level': "Very Unhealthy (201–300)",
@@ -54,6 +61,8 @@ class BusinessTipsScreen extends StatelessWidget {
         'tip': "🚨 Significant health risk for all employees.\n"
             "🏠 Recommend remote work for most departments.\n"
             "🔒 Seal windows and minimize ventilation with outside air.",
+        'fact':
+            "Exposure at this level can cause symptoms even in healthy individuals.",
       },
       {
         'level': "Hazardous (301+)",
@@ -62,6 +71,8 @@ class BusinessTipsScreen extends StatelessWidget {
         'tip': "🛑 Emergency level — suspend all non-essential on-site operations.\n"
             "💻 Fully switch to remote work protocols.\n"
             "📢 Communicate clearly with staff and stakeholders about the situation.",
+        'fact':
+            "Hazardous air can halt business operations and increase liability risks.",
       },
     ];
 
@@ -71,32 +82,58 @@ class BusinessTipsScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 24),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  LucideIcons.briefcase,
-                  size: 22,
-                  color: Color(0xFF2e7d32),
-                ),
-                SizedBox(width: 8),
-                Text(
-                  "Business Tips",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+            TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 500),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, 20 * (1 - value)),
+                    child: child,
+                  ),
+                );
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    LucideIcons.briefcase,
+                    size: 22,
                     color: Color(0xFF2e7d32),
                   ),
-                ),
-              ],
+                  SizedBox(width: 8),
+                  Text(
+                    "Business Tips",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2e7d32),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              "Recommendations for safe business operations 💼",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.5,
-                color: Colors.black54,
+            TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 600),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, 15 * (1 - value)),
+                    child: child,
+                  ),
+                );
+              },
+              child: const Text(
+                "Recommendations for safe business operations 💼",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.5,
+                  color: Colors.black54,
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -106,65 +143,99 @@ class BusinessTipsScreen extends StatelessWidget {
                 itemCount: aqiLevels.length,
                 itemBuilder: (context, index) {
                   final item = aqiLevels[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 18),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                  return TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: 1),
+                    duration: Duration(milliseconds: 400 + (index * 100)),
+                    curve: Curves.easeOutQuart,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 30 * (1 - value)),
+                          child: Transform.scale(
+                            scale: 0.95 + (value * 0.05),
+                            child: child,
+                          ),
                         ),
-                      ],
-                      border: Border.all(
-                        color: (item['color'] as Color).withOpacity(0.2),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 18),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12.withOpacity(0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: (item['color'] as Color).withOpacity(0.2),
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            // ignore: deprecated_member_use
-                            color: (item['color'] as Color).withOpacity(0.15),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (item['color'] as Color).withOpacity(0.15),
+                            ),
+                            child: Icon(
+                              item['icon'] as IconData,
+                              color: item['color'] as Color,
+                              size: 26,
+                            ),
                           ),
-                          child: Icon(
-                            item['icon'] as IconData,
-                            color: item['color'] as Color,
-                            size: 26,
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item['level'] as String,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w600,
-                                  color: item['color'] as Color,
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item['level'] as String,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                    color: item['color'] as Color,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                item['tip'] as String,
-                                style: const TextStyle(
-                                  fontSize: 14.5,
-                                  height: 1.6,
-                                  color: Colors.black87,
+                                const SizedBox(height: 8),
+                                Text(
+                                  item['tip'] as String,
+                                  style: const TextStyle(
+                                    fontSize: 14.5,
+                                    height: 1.6,
+                                    color: Colors.black87,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 10),
+                                Text(
+                                  "🌍 Did you know?",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13.5,
+                                    color: item['color'] as Color,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  item['fact'] as String,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black54,
+                                    height: 1.4,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },

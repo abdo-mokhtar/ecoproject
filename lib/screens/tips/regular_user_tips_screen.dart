@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+import '../detail_tip_screen.dart';
+
 class RegularUserTipsScreen extends StatelessWidget {
   const RegularUserTipsScreen({super.key});
 
@@ -70,11 +72,7 @@ class RegularUserTipsScreen extends StatelessWidget {
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  LucideIcons.user,
-                  size: 22,
-                  color: Color(0xFF2e7d32),
-                ),
+                Icon(LucideIcons.user, size: 22, color: Color(0xFF2e7d32)),
                 SizedBox(width: 8),
                 Text(
                   "Regular User Tips",
@@ -90,10 +88,7 @@ class RegularUserTipsScreen extends StatelessWidget {
             const Text(
               "Practical guidance for everyday air quality 🌿",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.5,
-                color: Colors.black54,
-              ),
+              style: TextStyle(fontSize: 14.5, color: Colors.black54),
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -114,64 +109,89 @@ class RegularUserTipsScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 18),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12.withOpacity(0.05),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DetailTipScreen(
+                              level: item['level'],
+                              color: item['color'],
+                            ),
                           ),
-                        ],
-                        border: Border.all(
-                          color: (item['color'] as Color).withOpacity(0.2),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 18),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12.withOpacity(0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                          border: Border.all(
+                            color: (item['color'] as Color).withOpacity(0.2),
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (item['color'] as Color).withOpacity(0.15),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    (item['color'] as Color).withOpacity(0.15),
+                              ),
+                              child: Icon(
+                                item['icon'] as IconData,
+                                color: item['color'] as Color,
+                                size: 26,
+                              ),
                             ),
-                            child: Icon(
-                              item['icon'] as IconData,
-                              color: item['color'] as Color,
-                              size: 26,
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item['level'] as String,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                    color: item['color'] as Color,
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          item['level'] as String,
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w600,
+                                            color: item['color'] as Color,
+                                          ),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        LucideIcons.info,
+                                        size: 18,
+                                        color: Colors.black45,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  item['tip'] as String,
-                                  style: const TextStyle(
-                                    fontSize: 14.5,
-                                    height: 1.6,
-                                    color: Colors.black87,
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    item['tip'] as String,
+                                    style: const TextStyle(
+                                      fontSize: 14.5,
+                                      height: 1.6,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

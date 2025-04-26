@@ -2,13 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart' show Lottie;
 import 'package:simple_animations/simple_animations.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
-    show
-        CustomizableEffect,
-        DotDecoration,
-        ExpandingDotsEffect,
-        JumpingDotEffect,
-        SlideEffect,
-        SmoothPageIndicator;
+    show ExpandingDotsEffect, SmoothPageIndicator;
 
 class StyleOnBoarding extends StatefulWidget {
   const StyleOnBoarding({

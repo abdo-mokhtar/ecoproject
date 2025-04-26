@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MeetOurTeamPage extends StatelessWidget {
+class MeetOurTeamPage extends StatefulWidget {
+  @override
+  _MeetOurTeamPageState createState() => _MeetOurTeamPageState();
+}
+
+class _MeetOurTeamPageState extends State<MeetOurTeamPage> {
   final List<TeamMember> teamMembers = [
     TeamMember(
         name: "Abdelrahman Temraz",
@@ -28,6 +33,19 @@ class MeetOurTeamPage extends StatelessWidget {
         imagePath: "assets/images/Abdullah.jpg"),
   ];
 
+  bool _isVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Make content visible after a short delay for the animation effect
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        _isVisible = true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,39 +63,48 @@ class MeetOurTeamPage extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: teamMembers.length,
-          itemBuilder: (context, index) {
-            final member = teamMembers[index];
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              elevation: 3,
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              color: Colors.white,
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(10),
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: member.imagePath.isNotEmpty
-                      ? AssetImage(member.imagePath)
-                      : null,
-                  child: member.imagePath.isEmpty
-                      ? const Icon(Icons.person, size: 40, color: Colors.grey)
-                      : null,
-                  backgroundColor: Colors.grey.shade300,
+      body: AnimatedOpacity(
+        opacity: _isVisible ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 1000),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView.builder(
+            itemCount: teamMembers.length,
+            itemBuilder: (context, index) {
+              final member = teamMembers[index];
+              return AnimatedScale(
+                scale: _isVisible ? 1.0 : 0.8,
+                duration: const Duration(milliseconds: 800),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  color: Colors.white,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(10),
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: member.imagePath.isNotEmpty
+                          ? AssetImage(member.imagePath)
+                          : null,
+                      child: member.imagePath.isEmpty
+                          ? const Icon(Icons.person,
+                              size: 40, color: Colors.grey)
+                          : null,
+                      backgroundColor: Colors.grey.shade300,
+                    ),
+                    title: Text(
+                      member.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(member.role),
+                  ),
                 ),
-                title: Text(
-                  member.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(member.role),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

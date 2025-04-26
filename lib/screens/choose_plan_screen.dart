@@ -1,8 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ChoosePlanScreen extends StatelessWidget {
+class ChoosePlanScreen extends StatefulWidget {
   const ChoosePlanScreen({super.key});
+
+  @override
+  State<ChoosePlanScreen> createState() => _ChoosePlanScreenState();
+}
+
+class _ChoosePlanScreenState extends State<ChoosePlanScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.2), // من تحت لفوق
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    ));
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeIn,
+    ));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> _saveUserTypeAndNavigate(
       BuildContext context, String userType, String route) async {
@@ -19,99 +62,104 @@ class ChoosePlanScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                /// 👋 Welcome Header (Centered and Modern)
-                const Center(
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'Welcome to',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black54,
-                          letterSpacing: 1.2,
-                        ),
-                        textAlign: TextAlign.center,
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Welcome to',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                              letterSpacing: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '🌿 EcoSense',
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2F7E6A),
+                              letterSpacing: 1.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            'Your smart guide to a greener tomorrow.\nChoose a plan to get started.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                              height: 1.4,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 4),
-                      Text(
-                        '🌿 EcoSense',
-                        style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF2F7E6A),
-                          letterSpacing: 1.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Your smart guide to a greener tomorrow.\nChoose a plan to get started.',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                          height: 1.4,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 36),
+                    ),
+                    const SizedBox(height: 36),
 
-                /// User Plan
-                buildPlanCard(
-                  context,
-                  title: 'User',
-                  icon: Icons.person,
-                  color: const Color(0xFFD4F4E3),
-                  features: [
-                    'Air Quality Updates',
-                    'Pollution Notifications',
-                    'Eco Friendly Tips',
-                    'Interactive Maps',
-                  ],
-                  onTap: () => _saveUserTypeAndNavigate(
-                      context, 'user', '/user-onboarding'),
-                ),
-                const SizedBox(height: 24),
+                    /// User Plan
+                    buildPlanCard(
+                      context,
+                      title: 'User',
+                      icon: Icons.person,
+                      color: const Color(0xFFD4F4E3),
+                      features: [
+                        'Air Quality Updates',
+                        'Pollution Notifications',
+                        'Eco Friendly Tips',
+                        'Interactive Maps',
+                      ],
+                      onTap: () => _saveUserTypeAndNavigate(
+                          context, 'user', '/user-onboarding'),
+                    ),
+                    const SizedBox(height: 24),
 
-                /// Business Plan
-                buildPlanCard(
-                  context,
-                  title: 'Business',
-                  icon: Icons.business,
-                  color: const Color(0xFFD4F4E3),
-                  features: [
-                    'Sustainable Practices',
-                    'Sustainability Tools',
-                    'Environmental Insights',
-                    'Emission Reduction',
-                  ],
-                  onTap: () => _saveUserTypeAndNavigate(
-                      context, 'business', '/business-onboarding'),
-                ),
-                const SizedBox(height: 24),
+                    /// Business Plan
+                    buildPlanCard(
+                      context,
+                      title: 'Business',
+                      icon: Icons.business,
+                      color: const Color(0xFFD4F4E3),
+                      features: [
+                        'Sustainable Practices',
+                        'Sustainability Tools',
+                        'Environmental Insights',
+                        'Emission Reduction',
+                      ],
+                      onTap: () => _saveUserTypeAndNavigate(
+                          context, 'business', '/business-onboarding'),
+                    ),
+                    const SizedBox(height: 24),
 
-                /// Government Plan
-                buildPlanCard(
-                  context,
-                  title: 'Government',
-                  icon: Icons.account_balance,
-                  color: const Color(0xFFD4F4E3),
-                  features: [
-                    'Comprehensive Analytics',
-                    'AI-driven Pollution ID',
-                    'Policy Suggestions',
-                    'Monitoring Tools',
+                    /// Government Plan
+                    buildPlanCard(
+                      context,
+                      title: 'Government',
+                      icon: Icons.account_balance,
+                      color: const Color(0xFFD4F4E3),
+                      features: [
+                        'Comprehensive Analytics',
+                        'AI-driven Pollution ID',
+                        'Policy Suggestions',
+                        'Monitoring Tools',
+                      ],
+                      onTap: () => _saveUserTypeAndNavigate(
+                          context, 'government', '/government-onboarding'),
+                    ),
                   ],
-                  onTap: () => _saveUserTypeAndNavigate(
-                      context, 'government', '/government-onboarding'),
                 ),
-              ],
+              ),
             ),
           ),
         ),

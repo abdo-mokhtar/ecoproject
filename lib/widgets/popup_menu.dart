@@ -3,9 +3,7 @@ import 'package:ecosensetest/screens/meet_our_team.dart' show MeetOurTeamPage;
 import 'package:flutter/material.dart';
 
 class PopupMenuButtonMenu extends StatelessWidget {
-  const PopupMenuButtonMenu({
-    super.key,
-  });
+  const PopupMenuButtonMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,65 +35,38 @@ class PopupMenuButtonMenu extends StatelessWidget {
       },
       itemBuilder: (BuildContext context) {
         return [
-          PopupMenuItem<String>(
-            value: 'login',
-            child: Row(
-              children: const [
-                Icon(Icons.login, color: Colors.black),
-                SizedBox(width: 10),
-                Text("LogIn"),
-              ],
-            ),
-          ),
+          _buildAnimatedMenuItem('login', Icons.login, "LogIn", Colors.black),
           const PopupMenuDivider(),
-          PopupMenuItem<String>(
-            value: 'signin',
-            child: Row(
-              children: const [
-                Icon(Icons.person_add, color: Colors.black),
-                SizedBox(width: 10),
-                Text("SignIn"),
-              ],
-            ),
-          ),
+          _buildAnimatedMenuItem(
+              'signin', Icons.person_add, "SignIn", Colors.black),
           const PopupMenuDivider(),
-          PopupMenuItem<String>(
-            value: 'team',
-            child: Row(
-              children: const [
-                Icon(Icons.group, color: Colors.black),
-                SizedBox(width: 10),
-                Text("Meet Our Team"),
-              ],
-            ),
-          ),
+          _buildAnimatedMenuItem(
+              'team', Icons.group, "Meet Our Team", Colors.black),
           const PopupMenuDivider(),
-          PopupMenuItem<String>(
-            value: 'about',
-            child: Row(
-              children: const [
-                Icon(Icons.info, color: Colors.black),
-                SizedBox(width: 10),
-                Text("About"),
-              ],
-            ),
-          ),
+          _buildAnimatedMenuItem('about', Icons.info, "About", Colors.black),
           const PopupMenuDivider(),
-          PopupMenuItem<String>(
-            value: 'signout',
-            child: Row(
-              children: const [
-                Icon(Icons.logout, color: Colors.red),
-                SizedBox(width: 10),
-                Text(
-                  "SignOut",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ],
-            ),
-          ),
+          _buildAnimatedMenuItem(
+              'signout', Icons.logout, "SignOut", Colors.red),
         ];
       },
+    );
+  }
+
+  PopupMenuItem<String> _buildAnimatedMenuItem(
+      String value, IconData icon, String text, Color iconColor) {
+    return PopupMenuItem<String>(
+      value: value,
+      child: AnimatedOpacity(
+        opacity: 1.0, // Always visible
+        duration: const Duration(milliseconds: 300),
+        child: Row(
+          children: [
+            Icon(icon, color: iconColor),
+            SizedBox(width: 10),
+            Text(text),
+          ],
+        ),
+      ),
     );
   }
 }

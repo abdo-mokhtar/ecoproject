@@ -121,36 +121,57 @@ class _HomeScreenUserState extends State<HomeScreenUser>
 
   Widget _buildBottomNavBar() {
     return CurvedNavigationBar(
-      backgroundColor: Colors.transparent,
-      color: Colors.green.shade100,
-      buttonBackgroundColor: Colors.green,
-      height: 60,
-      animationDuration: const Duration(milliseconds: 300),
-      index: _selectedIndex,
-      items: const [
-        Icon(Icons.home, size: 30, color: Colors.white),
-        Icon(Icons.person, size: 30, color: Colors.white),
-        Icon(Icons.tips_and_updates, size: 30, color: Colors.white),
-        Icon(Icons.settings, size: 30, color: Colors.white),
-      ],
-      onTap: (index) {
-        if (index == 3) {
-          int currentIndex = _selectedIndex; // ← خزنه
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SettingsPage(),
-              fullscreenDialog: true,
-            ),
-          ).then((_) {
-            // بعد ما نرجع من Settings، نرجع لنفس الصفحة
-            setState(() => _selectedIndex = currentIndex);
-          });
-        } else {
-          setState(() => _selectedIndex = index);
-        }
-      },
-    );
+        backgroundColor: Colors.transparent,
+        color: Colors.green.shade100,
+        buttonBackgroundColor: Colors.green,
+        height: 60,
+        animationDuration: const Duration(milliseconds: 300),
+        index: _selectedIndex,
+        items: const [
+          Icon(Icons.home, size: 30, color: Colors.white),
+          Icon(Icons.person, size: 30, color: Colors.white),
+          Icon(Icons.tips_and_updates, size: 30, color: Colors.white),
+          Icon(Icons.settings, size: 30, color: Colors.white),
+        ],
+        onTap: (index) async {
+          if (index == 3) {
+            int currentIndex = _selectedIndex; // حفظ الصفحة الحالية
+            await Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    SettingsPage(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  const beginOffset = Offset(0.0, 1.0); // يبدأ من تحت
+                  const endOffset = Offset.zero; // ينتهي في مكانه الطبيعي
+                  const curve = Curves.easeInOut;
+
+                  var offsetTween = Tween(begin: beginOffset, end: endOffset)
+                      .chain(CurveTween(curve: curve));
+
+                  var fadeTween = Tween<double>(begin: 0.0, end: 1.0)
+                      .chain(CurveTween(curve: curve));
+
+                  return SlideTransition(
+                    position: animation.drive(offsetTween),
+                    child: FadeTransition(
+                      opacity: animation.drive(fadeTween),
+                      child: child,
+                    ),
+                  );
+                },
+                transitionDuration: const Duration(milliseconds: 500),
+              ),
+            );
+            setState(() {
+              _selectedIndex = currentIndex;
+            });
+          } else {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
+        });
   }
 
   Widget _homeContent() {

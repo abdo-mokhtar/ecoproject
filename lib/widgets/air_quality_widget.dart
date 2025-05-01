@@ -1,10 +1,94 @@
+import 'package:ecosensetest/screens/notification_service.dart';
+import 'package:ecosensetest/widgets/notification_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ecosensetest/services/api_service.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
+import 'package:background_fetch/background_fetch.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/air_pollutants_info.dart';
+
+// اسم المهمة الدورية
+const String airQualityCheckTask = "airQualityCheckTask";
+
+// دالة الـ Headless Task لـ background_fetch
+void backgroundFetchHeadlessTask(HeadlessTask task) async {
+  String taskId = task.taskId;
+  bool isTimeout = task.timeout;
+  if (isTimeout) {
+    print("Headless task timed out: $taskId");
+    BackgroundFetch.finish(taskId);
+    return;
+  }
+
+  print("Executing headless task: $taskId");
+  try {
+    // قايمة المحافظات
+    final List<Map<String, dynamic>> egyptianCities = [
+      {"name": "Cairo", "lat": 30.0444, "lon": 31.2357},
+      {"name": "Giza", "lat": 30.0131, "lon": 31.2089},
+      {"name": "Alexandria", "lat": 31.2001, "lon": 29.9187},
+      {"name": "Mansoura", "lat": 31.0379, "lon": 31.3743},
+      {"name": "Assiut", "lat": 27.1820, "lon": 31.1840},
+      {"name": "Luxor", "lat": 25.6872, "lon": 32.6396},
+      {"name": "Aswan", "lat": 24.0889, "lon": 32.8998},
+      {"name": "Sharm El Sheikh", "lat": 27.9158, "lon": 34.3296},
+      {"name": "Hurghada", "lat": 27.2579, "lon": 33.8116},
+      {"name": "Port Said", "lat": 31.2653, "lon": 32.3019},
+      {"name": "Suez", "lat": 29.9668, "lon": 32.5498},
+      {"name": "Zagazig", "lat": 30.5877, "lon": 31.5020},
+      {"name": "Tanta", "lat": 30.7865, "lon": 31.0004},
+      {"name": "Damietta", "lat": 31.4175, "lon": 31.8144},
+      {"name": "Faiyum", "lat": 29.3084, "lon": 30.8441},
+    ];
+
+    // قراءة المحافظة المختارة من SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final selectedCityName = prefs.getString('selectedCity') ?? 'Cairo';
+    final selectedCity = egyptianCities.firstWhere(
+      (city) => city['name'] == selectedCityName,
+      orElse: () => egyptianCities[0], // القاهرة كافتراضي
+    );
+
+    // تهيئة الإشعارات
+    await NotificationService.init();
+
+    // جلب بيانات AQI للمحافظة المختارة فقط
+    final data = await fetchAirQualityData(
+      selectedCity['lat'],
+      selectedCity['lon'],
+      DateTime.now().subtract(const Duration(days: 7)).millisecondsSinceEpoch /
+          1000.0,
+      DateTime.now().millisecondsSinceEpoch / 1000.0,
+    );
+
+    if (data.isNotEmpty) {
+      final airQuality = data.last;
+      if (airQuality.aqi > 50) {
+        final tips = (aqi) {
+          if (aqi <= 100) return "Reduce outdoor activities.";
+          if (aqi <= 150) return "Sensitive groups should wear a mask.";
+          if (aqi <= 200) return "Avoid outdoor exposure.";
+          if (aqi <= 300) return "Stay indoors and close windows.";
+          return "Emergency! Stay indoors strictly.";
+        }(airQuality.aqi);
+
+        await NotificationService.showNotification(
+          "${selectedCity['name']} Alert! AQI: ${airQuality.aqi.round()}",
+          "الجو فيه مشكلة!\nTips: $tips",
+        );
+      }
+    } else {
+      print("No data for ${selectedCity['name']}");
+    }
+
+    BackgroundFetch.finish(taskId);
+  } catch (e) {
+    print("Error in headless task: $e");
+    BackgroundFetch.finish(taskId);
+  }
+}
 
 class AirQualityWidget extends StatefulWidget {
   const AirQualityWidget({super.key});
@@ -15,8 +99,9 @@ class AirQualityWidget extends StatefulWidget {
 
 class _AirQualityWidgetState extends State<AirQualityWidget> {
   late Future<List<AirQualityData>> airQualityFuture;
+  DateTime? lastNotificationTime;
 
-  // قايمة المدن المصرية مع إحداثياتها
+  // قايمة المحافظات
   final List<Map<String, dynamic>> egyptianCities = [
     {"name": "Cairo", "lat": 30.0444, "lon": 31.2357},
     {"name": "Giza", "lat": 30.0131, "lon": 31.2089},
@@ -35,32 +120,159 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
     {"name": "Faiyum", "lat": 29.3084, "lon": 30.8441},
   ];
 
-  // المدينة المختارة (افتراضيًا القاهرة)
-  Map<String, dynamic> selectedCity = {
-    "name": "Cairo",
-    "lat": 30.0444,
-    "lon": 31.2357
-  };
+  // المدينة المختارة
+  Map<String, dynamic>? selectedCity;
 
   @override
   void initState() {
     super.initState();
-    _refreshData();
+    // تهيئة background_fetch
+    initBackgroundFetch();
+    // تحميل المحافظة المختارة من SharedPreferences
+    _loadSelectedCity();
+    // عرض حوار تحسين البطارية
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showBatteryOptimizationDialog();
+    });
   }
 
-  void _refreshData() {
+  // دالة لتحميل المحافظة المختارة
+  Future<void> _loadSelectedCity() async {
+    final prefs = await SharedPreferences.getInstance();
+    final selectedCityName = prefs.getString('selectedCity');
     setState(() {
+      selectedCity = egyptianCities.firstWhere(
+        (city) => city['name'] == selectedCityName,
+        orElse: () => egyptianCities[0], // القاهرة كافتراضي
+      );
       airQualityFuture = fetchAirQualityData(
-        selectedCity['lat'],
-        selectedCity['lon'],
+        selectedCity!['lat'],
+        selectedCity!['lon'],
         DateTime.now()
                 .subtract(const Duration(days: 7))
                 .millisecondsSinceEpoch /
-            1000.0, // قيمة الوقت كـ double
-        DateTime.now().millisecondsSinceEpoch /
-            1000.0, // القيمة الحالية كـ double
+            1000.0,
+        DateTime.now().millisecondsSinceEpoch / 1000.0,
       );
     });
+  }
+
+  // دالة لحفظ المحافظة المختارة
+  Future<void> _saveSelectedCity(String cityName) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedCity', cityName);
+  }
+
+  // دالة لعرض حوار تحسين البطارية
+  void _showBatteryOptimizationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Enable Background Notifications"),
+        content: const Text(
+          "To receive air quality alerts when the app is closed, please disable battery optimization for EcoSenseTest in your device settings.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initBackgroundFetch() async {
+    // تهيئة background_fetch
+    await BackgroundFetch.configure(
+      BackgroundFetchConfig(
+        minimumFetchInterval: 180, // 3 ساعات بالدقائق
+        stopOnTerminate: false,
+        enableHeadless: true,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresStorageNotLow: false,
+        requiresDeviceIdle: false,
+        requiredNetworkType: NetworkType.ANY,
+        startOnBoot: true,
+      ),
+      (String taskId) async {
+        print("Background fetch task: $taskId");
+        try {
+          // قراءة المحافظة المختارة
+          final prefs = await SharedPreferences.getInstance();
+          final selectedCityName = prefs.getString('selectedCity') ?? 'Cairo';
+          final selectedCity = egyptianCities.firstWhere(
+            (city) => city['name'] == selectedCityName,
+            orElse: () => egyptianCities[0],
+          );
+
+          // جلب بيانات AQI للمحافظة المختارة
+          final data = await fetchAirQualityData(
+            selectedCity['lat'],
+            selectedCity['lon'],
+            DateTime.now()
+                    .subtract(const Duration(days: 7))
+                    .millisecondsSinceEpoch /
+                1000.0,
+            DateTime.now().millisecondsSinceEpoch / 1000.0,
+          );
+
+          if (data.isNotEmpty) {
+            final airQuality = data.last;
+            if (airQuality.aqi > 50) {
+              final tips = (aqi) {
+                if (aqi <= 100) return "Reduce outdoor activities.";
+                if (aqi <= 150) return "Sensitive groups should wear a mask.";
+                if (aqi <= 200) return "Avoid outdoor exposure.";
+                if (aqi <= 300) return "Stay indoors and close windows.";
+                return "Emergency! Stay indoors strictly.";
+              }(airQuality.aqi);
+
+              await NotificationService.showNotification(
+                "${selectedCity['name']} Alert! AQI: ${airQuality.aqi.round()}",
+                "الجو فيه مشكلة!\nTips: $tips",
+              );
+            }
+          }
+
+          BackgroundFetch.finish(taskId);
+        } catch (e) {
+          print("Error in task: $e");
+          BackgroundFetch.finish(taskId);
+        }
+      },
+      (String taskId) async {
+        print("Task timed out: $taskId");
+        BackgroundFetch.finish(taskId);
+      },
+    );
+
+    // تسجيل الـ Headless Task
+    BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+
+    // للاختبار فقط: جدولة مهمة فورية (قم بإزالتها بعد الاختبار)
+    BackgroundFetch.scheduleTask(TaskConfig(
+      taskId: "airQualityCheckTask",
+      delay: 10000, // 10 ثوانٍ
+      periodic: false,
+    ));
+  }
+
+  void _refreshData() {
+    if (selectedCity != null) {
+      setState(() {
+        airQualityFuture = fetchAirQualityData(
+          selectedCity!['lat'],
+          selectedCity!['lon'],
+          DateTime.now()
+                  .subtract(const Duration(days: 7))
+                  .millisecondsSinceEpoch /
+              1000.0,
+          DateTime.now().millisecondsSinceEpoch / 1000.0,
+        );
+      });
+    }
   }
 
   // دالة حساب AQI باستخدام الاستيفاء الخطي
@@ -69,65 +281,97 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
     return ((Ihigh - Ilow) / (Chigh - Clow)) * (concentration - Clow) + Ilow;
   }
 
+  // دالة النصائح حسب الـ AQI
+  String getTipsForAQI(double aqi) {
+    if (aqi <= 100) {
+      return "Reduce outdoor activities.";
+    } else if (aqi <= 150) {
+      return "Sensitive groups should wear a mask.";
+    } else if (aqi <= 200) {
+      return "Avoid outdoor exposure.";
+    } else if (aqi <= 300) {
+      return "Stay indoors and close windows.";
+    } else {
+      return "Emergency! Stay indoors strictly.";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: FutureBuilder(
-          future: airQualityFuture,
-          builder: (context, AsyncSnapshot<List<AirQualityData>> snapshot) {
-            print("Snapshot state: ${snapshot.connectionState}");
-            print("Snapshot has data: ${snapshot.hasData}");
-            print("Snapshot data: ${snapshot.data}");
-            print("Snapshot error: ${snapshot.error}");
+        body: selectedCity == null
+            ? const Center(child: CircularProgressIndicator())
+            : FutureBuilder(
+                future: airQualityFuture,
+                builder:
+                    (context, AsyncSnapshot<List<AirQualityData>> snapshot) {
+                  print("Snapshot state: ${snapshot.connectionState}");
+                  print("Snapshot has data: ${snapshot.hasData}");
+                  print("Snapshot data: ${snapshot.data}");
+                  print("Snapshot error: ${snapshot.error}");
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return _buildLoadingWidget();
-            } else if (snapshot.hasError) {
-              return _buildErrorWidget(snapshot.error.toString());
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return _buildNoDataWidget();
-            }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return _buildLoadingWidget();
+                  } else if (snapshot.hasError) {
+                    return _buildErrorWidget(snapshot.error.toString());
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return _buildNoDataWidget();
+                  }
 
-            final airQuality = snapshot.data!.last;
-            print("Displaying data for: ${airQuality.timestamp}");
+                  final airQuality = snapshot.data!.last;
+                  print("Displaying data for: ${airQuality.timestamp}");
 
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 4,
-                  color: Colors.white,
-                  child: Padding(
+                  // إرسال إشعار للمدينة المختارة لو AQI > 50
+                  if (airQuality.aqi > 50) {
+                    final now = DateTime.now();
+                    if (lastNotificationTime == null ||
+                        now.difference(lastNotificationTime!).inHours >= 1) {
+                      String tips = getTipsForAQI(airQuality.aqi);
+                      NotificationService.showNotification(
+                        "${selectedCity!['name']} Alert! AQI: ${airQuality.aqi.round()}",
+                        "الجو فيه مشكلة!\nTips: $tips",
+                      );
+                      lastNotificationTime = now;
+                    }
+                  }
+
+                  return Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeader(),
-                        const Divider(),
-                        _buildAirQualityIndex(airQuality.aqi),
-                        const SizedBox(height: 12),
-                        _buildPollutant("CO", airQuality.co, 1000),
-                        _buildPollutant("NO₂", airQuality.no2, 200),
-                        _buildPollutant("O₃", airQuality.o3, 120,
-                            color: Colors.orange),
-                        _buildPollutant("SO₂", airQuality.so2, 20),
-                        _buildPollutant("PM2.5", airQuality.pm25, 50),
-                        _buildPollutant("PM10", airQuality.pm10, 100),
-                        const Divider(),
-                        _buildBottomSection(airQuality.timestamp),
-                      ],
+                    child: SingleChildScrollView(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 4,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildHeader(),
+                              const Divider(),
+                              _buildAirQualityIndex(airQuality.aqi),
+                              const SizedBox(height: 12),
+                              _buildPollutant("CO", airQuality.co, 1000),
+                              _buildPollutant("NO₂", airQuality.no2, 200),
+                              _buildPollutant("O₃", airQuality.o3, 120,
+                                  color: Colors.orange),
+                              _buildPollutant("SO₂", airQuality.so2, 20),
+                              _buildPollutant("PM2.5", airQuality.pm25, 50),
+                              _buildPollutant("PM10", airQuality.pm10, 100),
+                              const Divider(),
+                              _buildBottomSection(airQuality.timestamp),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }
@@ -201,7 +445,7 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
             const BoxShadow(
               color: Colors.black26,
               blurRadius: 8,
-              offset: const Offset(0, 4),
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -223,27 +467,22 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
             ),
             const SizedBox(height: 5),
             Text(
-              "Please check your network settings or try another city.",
+              "Please check your network settings or try again.",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.grey[700]),
             ),
             const SizedBox(height: 15),
-
-            // زر Retry مع تحسين الشكل والتدرج
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    Colors.green.shade400,
-                    Colors.blue.shade400
-                  ], // تدرج اللون
+                  colors: [Colors.green.shade400, Colors.blue.shade400],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.green.shade200.withOpacity(0.5), // ظل ناعم
+                    color: Colors.green.shade200.withOpacity(0.5),
                     blurRadius: 6,
                     offset: const Offset(2, 4),
                   ),
@@ -254,7 +493,7 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
                   _refreshData();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent, // شفاف ليظهر التدرج
+                  backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -279,73 +518,84 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
   }
 
   Widget _buildHeader() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Icon(Icons.air, color: Colors.green, size: 28),
-          const SizedBox(width: 8),
-
-          // City name + Air Quality with Expanded to take full available width
-          Expanded(
-            child: Text(
-              "${selectedCity['name']} Air Quality",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(Icons.air, color: Colors.green, size: 28),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                "${selectedCity!['name']} Air Quality",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline, color: Colors.green, size: 28),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AirPollutantsInfo()),
-              );
-            },
-          )
-        ],
-      ),
-      Padding(
-        padding: const EdgeInsets.all(10.0),
-        // City Dropdown
-        child: _buildCityDropdown(),
-      )
-    ]);
+            IconButton(
+              icon:
+                  const Icon(Icons.info_outline, color: Colors.green, size: 28),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AirPollutantsInfo()),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.history, color: Colors.green, size: 28),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationHistoryScreen()),
+                );
+              },
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: _buildCityDropdown(),
+        ),
+      ],
+    );
   }
 
   Widget _buildCityDropdown() {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      width: screenWidth * 0.40, // تقليل العرض
+      width: screenWidth * 0.40,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Colors.white, Colors.grey.shade50],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12), // تقليل الـ Border Radius شوية
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.green.shade100, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.green.shade50.withOpacity(0.5),
-            blurRadius: 6, // تقليل الـ Blur
+            blurRadius: 6,
             offset: const Offset(0, 3),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 8), // تقليل الـ Padding
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
           isExpanded: true,
-          value: selectedCity['name'],
+          value: selectedCity?['name'],
           hint: Text(
-            'Select City',
+            'اختر محافظة',
             style: TextStyle(
               color: Colors.green.shade700,
-              fontSize: 13, // تقليل حجم الخط
+              fontSize: 13,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.3,
             ),
@@ -357,7 +607,7 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
                 city['name'],
                 style: TextStyle(
                   color: Colors.black.withOpacity(0.85),
-                  fontSize: 12, // تقليل حجم الخط
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -372,19 +622,20 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
               );
               setState(() {
                 selectedCity = newCity;
+                _saveSelectedCity(newCity['name']); // حفظ المحافظة المختارة
                 _refreshData();
               });
             }
           },
           buttonStyleData: ButtonStyleData(
-            height: 40, // تقليل الارتفاع
+            height: 40,
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
           dropdownStyleData: DropdownStyleData(
-            maxHeight: 180, // تقليل أقصى ارتفاع للقايمة
+            maxHeight: 180,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Colors.white,
@@ -404,17 +655,17 @@ class _AirQualityWidgetState extends State<AirQualityWidget> {
             elevation: 0,
             scrollbarTheme: ScrollbarThemeData(
               radius: const Radius.circular(10),
-              thickness: WidgetStateProperty.all(4), // تقليل سمك الـ Scrollbar
+              thickness: WidgetStateProperty.all(4),
               thumbColor: WidgetStateProperty.all(Colors.green.shade300),
             ),
           ),
           menuItemStyleData: const MenuItemStyleData(
-            height: 40, // تقليل ارتفاع العناصر
+            height: 40,
             padding: EdgeInsets.symmetric(horizontal: 12),
           ),
           iconStyleData: IconStyleData(
             icon: Icon(Icons.arrow_drop_down, color: Colors.green.shade700),
-            iconSize: 22, // تقليل حجم الأيقونة
+            iconSize: 22,
           ),
         ),
       ),

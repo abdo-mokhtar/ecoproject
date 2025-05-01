@@ -1,14 +1,12 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
     namespace = "com.example.ecosensetest"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 35 // تحديد صريح لدعم WorkManager
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -16,27 +14,30 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = "1.8"
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.ecosensetest"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 23 // مطلوب لـ WorkManager
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // TODO: أضف إعدادات التوقيع الخاصة بك للبناء الإصداري.
+            // استخدام مفاتيح التصحيح مؤقتًا لتشغيل `flutter run --release`.
             signingConfig = signingConfigs.debug
         }
     }
+}
+
+dependencies {
+
+    // إضافة Kotlin standard library
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0"
 }
 
 flutter {

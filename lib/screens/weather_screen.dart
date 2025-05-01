@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dropdown_button2/dropdown_button2.dart'
     show
         ButtonStyleData,
@@ -7,297 +6,241 @@ import 'package:dropdown_button2/dropdown_button2.dart'
         IconStyleData,
         MenuItemStyleData;
 import 'package:ecosensetest/models/weather_model.dart';
-import 'package:ecosensetest/screens/weather_api.dart';
-import 'package:flutter/foundation.dart';
+import 'package:ecosensetest/weather_provider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class WeatherScreen extends StatefulWidget {
+class WeatherScreen extends StatelessWidget {
   const WeatherScreen({super.key});
 
   @override
-  _WeatherScreenState createState() => _WeatherScreenState();
-}
-
-class _WeatherScreenState extends State<WeatherScreen> {
-  ApiResponse? response;
-  bool inProgress = false;
-  Location mylocation = Location(
-      name: 'Cairo',
-      region: 'Al Qahirah',
-      country: 'Egypt',
-      lat: 30.05,
-      lon: 31.25,
-      tzId: "Africa/Cairo",
-      localtimeEpoch: 1741458073,
-      localtime: "2025-03-08 20:21");
-
-  @override
-  void initState() {
-    super.initState();
-    fetchWeatherData();
-  }
-
-  Future<void> fetchWeatherData() async {
-    final myWeather = WeatherApi();
-
-    try {
-      setState(() {
-        inProgress = true;
-      });
-
-      // Get weather data including forecast
-      final currentResponse = await myWeather.getWeatherData(
-          mylocation.name, "current.json", false);
-      final forecastResponse = await myWeather.getWeatherData(
-          mylocation.name, "forecast.json", true);
-
-      final weatherData = ApiResponse(
-        location: mylocation,
-        current: Current.fromJson(jsonDecode(currentResponse.body)['current']),
-        forecast:
-            Forecast.fromJson(jsonDecode(forecastResponse.body)["forecast"]),
-      );
-      setState(() {
-        response = weatherData;
-        inProgress = false;
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print('error');
-      }
-
-      setState(() {
-        inProgress = false;
-      });
-
-      // Show error message to user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error : $e',
-            style: const TextStyle(color: Colors.white), // Text color
-          ),
-          backgroundColor: Colors.red, // Background color
-          behavior: SnackBarBehavior.floating, // Floating effect
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10), // Rounded corners
-          ),
-          action: SnackBarAction(
-            label: 'Retry',
-            textColor: Colors.white,
-            onPressed: () {
-              fetchWeatherData(); // Retry fetching data
-            },
-          ),
-          duration: const Duration(seconds: 3), // Auto-dismiss duration
-        ),
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 4,
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Row(
-                    children: [
-                      Icon(Icons.cloud_outlined,
-                          color: Color(0xFF64B5F6), size: 35),
-                      SizedBox(width: 5),
-                      Text("Weather",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25)),
-                      Spacer(),
-                      Icon(Icons.open_in_new, color: Color(0xFF64B5F6)),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Row(
+    return Consumer<WeatherProvider>(
+      builder: (context, weatherProvider, child) {
+        // Handle errors
+        if (weatherProvider.weatherData == null && !weatherProvider.isLoading) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text(
+                  'Error: Failed to load weather data',
+                  style: TextStyle(color: Colors.white),
+                ),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                action: SnackBarAction(
+                  label: 'Retry',
+                  textColor: Colors.white,
+                  onPressed: () {
+                    weatherProvider.fetchWeatherData();
+                  },
+                ),
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          });
+        }
+
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              elevation: 4,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Row(
                       children: [
-                        const Icon(Icons.location_on_outlined,
-                            color: Color(0xFF64B5F6),
-                            size: 22), // زيادة حجم الأيقونة قليلاً
-                        const SizedBox(width: 8), // زيادة المسافة
-                        DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            value: mylocation.name,
-                            hint: const Text(
-                              'Select City',
-                              style: const TextStyle(
-                                color: const Color(0xFF64B5F6), // أخضر داكن
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            items: [
-                              "Alexandria",
-                              "Aswan",
-                              "Asyut",
-                              "Beheira",
-                              "Beni Suef",
-                              "Cairo",
-                              "Dakahlia",
-                              "Damietta",
-                              "Faiyum",
-                              "Gharbia",
-                              "Giza",
-                              "Ismailia",
-                              "Kafr El Sheikh",
-                              "Luxor",
-                              "Matrouh",
-                              "Minya",
-                              "Monufia",
-                              "New Valley",
-                              "North Sinai",
-                              "Port Said",
-                              "Qalyubia",
-                              "Qena",
-                              "Red Sea",
-                              "Sharqia",
-                              "Sohag",
-                              "South Sinai",
-                              "Suez"
-                            ].map((String city) {
-                              return DropdownMenuItem<String>(
-                                value: city,
-                                child: Text(
-                                  city,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey.shade800, // رمادي داكن
-                                  ),
+                        Icon(Icons.cloud_outlined,
+                            color: Color(0xFF64B5F6), size: 35),
+                        SizedBox(width: 5),
+                        Text("Weather",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25)),
+                        Spacer(),
+                        Icon(Icons.open_in_new, color: Color(0xFF64B5F6)),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on_outlined,
+                              color: Color(0xFF64B5F6), size: 22),
+                          const SizedBox(width: 8),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton2<String>(
+                              isExpanded: true,
+                              value: weatherProvider.selectedLocation.name,
+                              hint: const Text(
+                                'Select City',
+                                style: TextStyle(
+                                  color: Color(0xFF64B5F6),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                setState(() {
-                                  mylocation.name = newValue;
-                                  fetchWeatherData();
-                                });
-                              }
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              height: 40,
-                              width: 150,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: const Color(0xFF64B5F6),
-                                  width: 1,
-                                ),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.blue.shade100, // ظل أخضر فاتح
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
                               ),
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 300,
-                              width: 220,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color:
-                                        Colors.blue.shade100.withOpacity(0.3),
-                                    blurRadius: 10,
-                                    spreadRadius: 2,
-                                    offset: const Offset(0, 4),
+                              items: [
+                                "Alexandria",
+                                "Aswan",
+                                "Asyut",
+                                "Beheira",
+                                "Beni Suef",
+                                "Cairo",
+                                "Dakahlia",
+                                "Damietta",
+                                "Faiyum",
+                                "Gharbia",
+                                "Giza",
+                                "Ismailia",
+                                "Kafr El Sheikh",
+                                "Luxor",
+                                "Matrouh",
+                                "Minya",
+                                "Monufia",
+                                "New Valley",
+                                "North Sinai",
+                                "Port Said",
+                                "Qalyubia",
+                                "Qena",
+                                "Red Sea",
+                                "Sharqia",
+                                "Sohag",
+                                "South Sinai",
+                                "Suez"
+                              ].map((String city) {
+                                return DropdownMenuItem<String>(
+                                  value: city,
+                                  child: Text(
+                                    city,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade800,
+                                    ),
                                   ),
-                                ],
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.blue.shade50,
-                                    Colors.white,
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  weatherProvider.updateCity(newValue);
+                                }
+                              },
+                              buttonStyleData: ButtonStyleData(
+                                height: 40,
+                                width: 150,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: const Color(0xFF64B5F6),
+                                    width: 1,
+                                  ),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.blue.shade100,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
                                   ],
                                 ),
                               ),
-                              offset: const Offset(0, -5),
-                            ),
-                            iconStyleData: IconStyleData(
-                              icon: const Icon(
-                                Icons.arrow_drop_down,
-                                color: const Color(0xFF64B5F6), // أخضر داكن
-                                size: 28,
+                              dropdownStyleData: DropdownStyleData(
+                                maxHeight: 300,
+                                width: 220,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Colors.blue.shade100.withOpacity(0.3),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.blue.shade50,
+                                      Colors.white,
+                                    ],
+                                  ),
+                                ),
+                                offset: const Offset(0, -5),
                               ),
-                              openMenuIcon: Icon(
-                                Icons.arrow_drop_up,
-                                color: Colors.blue.shade800,
+                              iconStyleData: IconStyleData(
+                                icon: const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Color(0xFF64B5F6),
+                                  size: 28,
+                                ),
+                                openMenuIcon: Icon(
+                                  Icons.arrow_drop_up,
+                                  color: Colors.blue.shade800,
+                                ),
                               ),
-                            ),
-                            menuItemStyleData: MenuItemStyleData(
-                              height: 48,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              overlayColor:
-                                  WidgetStateProperty.resolveWith<Color>(
-                                (states) {
-                                  if (states.contains(WidgetState.hovered)) {
-                                    return Colors.blue
-                                        .shade50; // تأثير أخضر فاتح عند hover
-                                  }
-                                  return Colors.transparent;
-                                },
+                              menuItemStyleData: MenuItemStyleData(
+                                height: 48,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                overlayColor:
+                                    WidgetStateProperty.resolveWith<Color>(
+                                  (states) {
+                                    if (states.contains(WidgetState.hovered)) {
+                                      return Colors.blue.shade50;
+                                    }
+                                    return Colors.transparent;
+                                  },
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  inProgress
-                      ? const CircularProgressIndicator()
-                      : _buildMainWeatherCard(),
-                  const SizedBox(height: 20),
-                  _buildWeatherDetails(),
-                  const SizedBox(height: 20),
-                  const Text("24-Hour Forecast",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 10),
-                  SizedBox(height: 150, child: _buildHourlyForecast()),
-                ],
+                    const SizedBox(height: 10),
+                    weatherProvider.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : _buildMainWeatherCard(weatherProvider.weatherData),
+                    const SizedBox(height: 20),
+                    _buildWeatherDetails(weatherProvider.weatherData),
+                    const SizedBox(height: 20),
+                    const Text("24-Hour Forecast",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                        height: 150,
+                        child: _buildHourlyForecast(
+                            weatherProvider.weatherData, context)),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildMainWeatherCard() {
+  Widget _buildMainWeatherCard(ApiResponse? response) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -315,7 +258,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       fontWeight: FontWeight.bold,
                       color: Colors.blue)),
               const Spacer(),
-              //weather image condition
               if (response?.current?.condition?.icon != null)
                 Container(
                   padding: const EdgeInsets.all(2),
@@ -341,7 +283,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  Widget _buildWeatherDetails() {
+  Widget _buildWeatherDetails(ApiResponse? response) {
     return SingleChildScrollView(
       child: Center(
         child: Column(
@@ -407,8 +349,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  Widget _buildHourlyForecast() {
-    // Get all hourly data from multiple days
+  Widget _buildHourlyForecast(ApiResponse? response, BuildContext context) {
     final day1HourlyData = response?.forecast?.forecastday?[0].hour;
     final day2HourlyData = response?.forecast?.forecastday?[1].hour;
 
@@ -425,19 +366,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            const SizedBox(height: 12), // تقليل المسافة بين النص والزرار
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                fetchWeatherData();
+                context.read<WeatherProvider>().fetchWeatherData();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent, // مهم لجعل التدرج يعمل
+                backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(8), // تقليل انحناء الزوايا
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                padding: EdgeInsets.zero, // إزالة الـ padding الافتراضي
+                padding: EdgeInsets.zero,
               ),
               child: Ink(
                 decoration: BoxDecoration(
@@ -453,29 +393,20 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.blue.shade700, Colors.blue.shade300],
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.read<WeatherProvider>().fetchWeatherData();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        fetchWeatherData();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Colors.transparent, // مهم لجعل التدرج يعمل
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        "Retry",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
+                    child: const Text(
+                      "Retry",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ),
                 ),
@@ -486,7 +417,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       );
     }
 
-    // Filter to get only the next 24 hours
     final now = DateTime.now();
     final next24Hours = [
       ...(day1HourlyData),
@@ -503,10 +433,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
     }
 
     return Scrollbar(
-      // Wrap with Scrollbar
-      thumbVisibility: false, // Make the thumb always visible
-      thickness: 5, // Adjust thickness
-      radius: const Radius.circular(10), // Rounded edges for the scrollbar
+      thumbVisibility: false,
+      thickness: 5,
+      radius: const Radius.circular(10),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: next24Hours.length,
@@ -514,8 +443,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           final hour = next24Hours[index];
           final hourTime =
               DateTime.fromMillisecondsSinceEpoch((hour.timeEpoch ?? 0) * 1000);
-          final formattedTime =
-              DateFormat('h a').format(hourTime); // Format to AM/PM
+          final formattedTime = DateFormat('h a').format(hourTime);
 
           return Container(
             width: 100,
@@ -532,14 +460,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Time display (h:mm a)
                 Text(
                   formattedTime,
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 5),
-                // Weather icon
                 if (hour.condition?.icon != null)
                   Image.network(
                     'https:${hour.condition!.icon}',
@@ -547,7 +473,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     height: 40,
                   ),
                 const SizedBox(height: 5),
-                // Temperature display
                 Text(
                   '${hour.tempC?.toInt() ?? '--'}°C',
                   style: const TextStyle(
@@ -556,12 +481,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       color: Colors.blue),
                 ),
                 const SizedBox(height: 5),
-                // Humidity display
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(
-                      Icons.water_drop, // Humidity icon
+                      Icons.water_drop,
                       size: 16,
                       color: Colors.blue,
                     ),
@@ -572,12 +496,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                   ],
                 ),
-                // Wind speed display
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(
-                      Icons.air, // Wind icon
+                      Icons.air,
                       size: 16,
                       color: Colors.grey,
                     ),
@@ -595,10 +518,4 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: WeatherScreen(),
-  ));
 }

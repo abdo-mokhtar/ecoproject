@@ -9,6 +9,7 @@ import 'package:ecosensetest/widgets/popup_menu.dart' show PopupMenuButtonMenu;
 import 'package:ecosensetest/screens/navigationdestination/profile_widget.dart'
     show ProfileWidget;
 import 'package:flutter/material.dart';
+import 'package:ecosensetest/widgets/current_readings_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -204,8 +205,7 @@ class _HomeScreenState extends State<HomeScreenGoverment>
                         controller: _tabController,
                         children: const [
                           AirQualityWidget(),
-                          Center(child: Text("Hardware Data\n(Sensors)")),
-                        ],
+CurrentReadingsWidget(),                        ],
                       ),
                     ),
                   ],

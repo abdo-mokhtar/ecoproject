@@ -23,9 +23,18 @@ import 'screens/navigationdestination/home_screen_goverment.dart'
 import 'screens/navigationdestination/home_screen_user.dart'
     show HomeScreenUser;
 
+// استيراد Firebase Core
+import 'package:firebase_core/firebase_core.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationService.init(); // تهيئة الإشعارات
+
+  // تهيئة Firebase
+  await Firebase.initializeApp();
+
+  // تهيئة خدمة الإشعارات
+  await NotificationService.init();
+
   runApp(const EcoSenseApp());
 }
 

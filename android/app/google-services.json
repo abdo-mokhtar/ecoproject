@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "742312457368",
+    "firebase_url": "https://airsense-v1-default-rtdb.firebaseio.com",
+    "project_id": "airsense-v1",
+    "storage_bucket": "airsense-v1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742312457368:android:ec2dbe7f3d2b7514df0ced",
+        "android_client_info": {
+          "package_name": "com.example.ecosensetest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCF3Pkd1klGo5LrGj9pSZL_CSYr2wXRK-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,10 +17,8 @@ class AuthState extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
 
-  // Getter for FirebaseAuth instance
+  // Getters
   FirebaseAuth get auth => _auth;
-
-  // Getters for other properties
   String get email => _email;
   String get password => _password;
   String get username => _username;
@@ -82,6 +80,8 @@ class AuthState extends ChangeNotifier {
   }
 
   String? validatePasswordMatch() {
+    if (_password.isEmpty) return 'Please enter a password';
+    if (_password.length < 6) return 'Password must be at least 6 characters';
     if (_password != _confirmPassword) return 'Passwords do not match';
     return null;
   }
@@ -98,8 +98,13 @@ class AuthState extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return true;
+    } on FirebaseAuthException catch (e) {
+      _errorMessage = e.message ?? 'Invalid email or password';
+      _isLoading = false;
+      notifyListeners();
+      return false;
     } catch (e) {
-      _errorMessage = 'Invalid email or password';
+      _errorMessage = 'An unexpected error occurred';
       _isLoading = false;
       notifyListeners();
       return false;
@@ -112,6 +117,21 @@ class AuthState extends ChangeNotifier {
     notifyListeners();
 
     try {
+      // Validate all fields
+      if (_username.isEmpty) {
+        _errorMessage = 'Please enter a username';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      if (_phone.isEmpty) {
+        _errorMessage = 'Please enter a phone number';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
       if (validateEmail() != null || validatePasswordMatch() != null) {
         _errorMessage = 'Please fix the errors in the form';
         _isLoading = false;
@@ -130,8 +150,19 @@ class AuthState extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return true;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        _errorMessage = 'The password provided is too weak';
+      } else if (e.code == 'email-already-in-use') {
+        _errorMessage = 'The account already exists for that email';
+      } else {
+        _errorMessage = e.message ?? 'An error occurred during sign up';
+      }
+      _isLoading = false;
+      notifyListeners();
+      return false;
     } catch (e) {
-      _errorMessage = 'An unexpected error occurred';
+      _errorMessage = 'An unexpected error occurred: $e';
       _isLoading = false;
       notifyListeners();
       return false;

@@ -280,7 +280,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               context, '/homebusiness');
                                         } else if (userType == 'government') {
                                           Navigator.pushReplacementNamed(
-                                              context, '/homegovernment');
+                                              context,
+                                              '/homegoverment'); // تم تصحيح الخطأ الإملائي هنا
                                         }
                                       } else {
                                         ScaffoldMessenger.of(context)

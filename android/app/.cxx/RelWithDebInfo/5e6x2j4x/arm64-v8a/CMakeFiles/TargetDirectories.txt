@@ -1,0 +1,2 @@
+C:/Users/dell/Downloads/EcoSense_Project-master/android/app/.cxx/RelWithDebInfo/5e6x2j4x/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/dell/Downloads/EcoSense_Project-master/android/app/.cxx/RelWithDebInfo/5e6x2j4x/arm64-v8a/CMakeFiles/rebuild_cache.dir

@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             context, '/homebusiness');
                                       } else if (userType == 'government') {
                                         Navigator.pushReplacementNamed(
-                                            context, '/homegovernment');
+                                            context, '/homegoverment');
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
